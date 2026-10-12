@@ -9,6 +9,7 @@ import {
   Avatar,
   Tooltip,
   Divider,
+  Chip,
 } from '@mui/material';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -457,12 +458,28 @@ export default function GlassNavbar() {
           <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
             {user?.displayName || 'User'}
           </Typography>
-          <Typography
-            variant="caption"
-            sx={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)' }}
-          >
-            {user?.email}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5, flexWrap: 'wrap' }}>
+            <Typography
+              variant="caption"
+              sx={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)' }}
+            >
+              {user?.email}
+            </Typography>
+            {user?.isSupabase && (
+              <Chip
+                label="Supabase"
+                size="small"
+                sx={{
+                  height: 18,
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  bgcolor: 'rgba(16, 185, 129, 0.15)',
+                  color: '#34d399',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                }}
+              />
+            )}
+          </Box>
         </Box>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem

@@ -9,64 +9,113 @@ import {
   Button,
   Alert,
   Divider,
+  Tabs,
+  Tab,
+  Chip,
+  CircularProgress,
 } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import CloudQueueRoundedIcon from '@mui/icons-material/CloudQueueRounded';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, closeLoginModal, setAuthError } from '../../features/auth/authSlice';
+import {
+  loginWithSupabase,
+  signupWithSupabase,
+  login,
+  closeLoginModal,
+  clearAuthMessages,
+} from '../../features/auth/authSlice';
+import { openSettingsModal } from '../../features/settings/settingsSlice';
 import GlassButton from '../common/GlassButton';
 
 export default function LoginModal() {
   const dispatch = useDispatch();
-  const { isLoginModalOpen, error } = useSelector((state) => state.auth);
+  const { isLoginModalOpen, error, successMessage, isLoading, isSupabaseConfigured } =
+    useSelector((state) => state.auth);
   const themeMode = useSelector((state) => state.theme.mode);
   const isDark = themeMode === 'dark';
 
-  const [username, setUsername] = useState('');
+  const [tabIndex, setTabIndex] = useState(0); // 0 = Sign In, 1 = Sign Up
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [formError, setFormError] = useState('');
 
   if (!isLoginModalOpen) return null;
 
+  const handleTabChange = (_, newIndex) => {
+    setTabIndex(newIndex);
+    setFormError('');
+    dispatch(clearAuthMessages());
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!username.trim()) {
-      setFormError('Please enter a username or email address.');
+    setFormError('');
+    dispatch(clearAuthMessages());
+
+    if (!email.trim()) {
+      setFormError('Please enter your email address.');
       return;
     }
     if (!password.trim()) {
-      setFormError('Please enter a password.');
+      setFormError('Please enter your password.');
+      return;
+    }
+    if (password.length < 6) {
+      setFormError('Password must be at least 6 characters.');
       return;
     }
 
-    dispatch(
-      login({
-        username: username.trim(),
-        name: username.includes('@') ? username.split('@')[0] : username,
-      })
-    );
-    setUsername('');
-    setPassword('');
-    setFormError('');
+    if (tabIndex === 0) {
+      // Sign In
+      dispatch(
+        loginWithSupabase({
+          email: email.trim(),
+          password: password.trim(),
+        })
+      );
+    } else {
+      // Sign Up
+      dispatch(
+        signupWithSupabase({
+          email: email.trim(),
+          password: password.trim(),
+          displayName: displayName.trim(),
+        })
+      );
+    }
   };
 
   const handleDemoLogin = () => {
-    dispatch(
-      login({
-        username: 'LoonLabs_Intern',
-        name: 'Interview Candidate',
-        email: 'candidate@loonlabs.com',
-      })
-    );
-    setUsername('');
-    setPassword('');
     setFormError('');
+    dispatch(clearAuthMessages());
+
+    if (isSupabaseConfigured) {
+      // Attempt login or fallback
+      dispatch(
+        loginWithSupabase({
+          email: 'evaluator@cineglass.tv',
+          password: 'Password123!',
+        })
+      );
+    } else {
+      // Instant local demo session
+      dispatch(
+        login({
+          username: 'LoonLabs_Evaluator',
+          name: 'Interview Candidate',
+          email: 'candidate@loonlabs.com',
+        })
+      );
+    }
   };
 
   const textFieldSx = {
-    mb: 2.5,
+    mb: 2,
     '& .MuiOutlinedInput-root': {
       borderRadius: 3,
       backgroundColor: isDark
@@ -132,11 +181,11 @@ export default function LoginModal() {
       </IconButton>
 
       <DialogContent sx={{ p: 1 }}>
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
+        <Box sx={{ textAlign: 'center', mb: 2 }}>
           <Box
             sx={{
-              width: 52,
-              height: 52,
+              width: 50,
+              height: 50,
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
               display: 'flex',
@@ -147,10 +196,10 @@ export default function LoginModal() {
               boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)',
             }}
           >
-            <LockOutlinedIcon sx={{ color: '#ffffff', fontSize: '1.6rem' }} />
+            <LockOutlinedIcon sx={{ color: '#ffffff', fontSize: '1.5rem' }} />
           </Box>
           <Typography variant="h5" sx={{ fontWeight: 800 }}>
-            Welcome to CineGlass
+            {tabIndex === 0 ? 'Welcome to CineGlass' : 'Create an Account'}
           </Typography>
           <Typography
             variant="body2"
@@ -159,28 +208,107 @@ export default function LoginModal() {
               mt: 0.5,
             }}
           >
-            Sign in to access your Watchlist & custom preferences
+            {tabIndex === 0
+              ? 'Sign in to sync your Watchlist with Supabase database'
+              : 'Register to access cloud-synced favorites and history'}
           </Typography>
+
+          {/* Supabase Status Chip */}
+          <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'center' }}>
+            {isSupabaseConfigured ? (
+              <Chip
+                icon={<CloudQueueRoundedIcon sx={{ fontSize: '1rem !important', color: '#10b981 !important' }} />}
+                label="Supabase DB & Auth Connected"
+                size="small"
+                sx={{
+                  bgcolor: 'rgba(16, 185, 129, 0.12)',
+                  color: '#34d399',
+                  fontWeight: 600,
+                  fontSize: '0.72rem',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                }}
+              />
+            ) : (
+              <Chip
+                icon={<CloudQueueRoundedIcon sx={{ fontSize: '1rem !important' }} />}
+                label="Local Mode • Configure Supabase in Settings"
+                size="small"
+                onClick={() => {
+                  dispatch(closeLoginModal());
+                  dispatch(openSettingsModal());
+                }}
+                clickable
+                sx={{
+                  bgcolor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.05)',
+                  color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.65)',
+                  fontSize: '0.72rem',
+                }}
+              />
+            )}
+          </Box>
         </Box>
 
+        {/* Auth Mode Tabs */}
+        <Box sx={{ borderBottom: 1, borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)', mb: 2 }}>
+          <Tabs
+            value={tabIndex}
+            onChange={handleTabChange}
+            variant="fullWidth"
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{ minHeight: 40 }}
+          >
+            <Tab label="Sign In" sx={{ fontWeight: 700, textTransform: 'none', minHeight: 40 }} />
+            <Tab label="Create Account" sx={{ fontWeight: 700, textTransform: 'none', minHeight: 40 }} />
+          </Tabs>
+        </Box>
+
+        {/* Messages */}
         {(formError || error) && (
-          <Alert severity="error" sx={{ mb: 2.5, borderRadius: 2 }}>
+          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
             {formError || error}
           </Alert>
         )}
 
+        {successMessage && (
+          <Alert severity="success" sx={{ mb: 2, borderRadius: 2 }}>
+            {successMessage}
+          </Alert>
+        )}
+
         <Box component="form" onSubmit={handleSubmit}>
+          {tabIndex === 1 && (
+            <TextField
+              fullWidth
+              label="Display Name"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder="e.g. Alex"
+              sx={textFieldSx}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <PersonOutlineRoundedIcon
+                      sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
+                    />
+                  ),
+                },
+              }}
+            />
+          )}
+
           <TextField
             fullWidth
-            label="Username or Email"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="e.g. adithya or intern@loonlabs.com"
+            type="email"
+            label="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="e.g. user@cineglass.tv"
             sx={textFieldSx}
             slotProps={{
               input: {
                 startAdornment: (
-                  <PersonOutlineRoundedIcon
+                  <EmailOutlinedIcon
                     sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
                   />
                 ),
@@ -212,9 +340,16 @@ export default function LoginModal() {
             type="submit"
             fullWidth
             size="large"
+            disabled={isLoading}
             sx={{ py: 1.2, mb: 2 }}
           >
-            Sign In
+            {isLoading ? (
+              <CircularProgress size={24} sx={{ color: '#ffffff' }} />
+            ) : tabIndex === 0 ? (
+              'Sign In with Supabase'
+            ) : (
+              'Create Supabase Account'
+            )}
           </GlassButton>
         </Box>
 
@@ -225,17 +360,18 @@ export default function LoginModal() {
             fontSize: '0.8rem',
           }}
         >
-          OR FOR EVALUATORS
+          QUICK EVALUATION
         </Divider>
 
-        {/* 1-Click Demo Login Button for Evaluator Convenience */}
+        {/* 1-Click Demo Login */}
         <Button
           fullWidth
           variant="outlined"
           onClick={handleDemoLogin}
+          disabled={isLoading}
           startIcon={<AutoAwesomeRoundedIcon sx={{ color: '#ec4899' }} />}
           sx={{
-            py: 1.2,
+            py: 1.1,
             borderRadius: 3,
             borderColor: 'rgba(99, 102, 241, 0.5)',
             color: isDark ? '#ffffff' : '#0f172a',
@@ -249,7 +385,7 @@ export default function LoginModal() {
             },
           }}
         >
-          1-Click Demo Login (Loon Labs)
+          1-Click Evaluator Login
         </Button>
       </DialogContent>
     </Dialog>

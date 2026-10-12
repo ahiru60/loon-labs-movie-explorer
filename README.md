@@ -36,7 +36,14 @@ The application manages its entire data flow via **Redux Toolkit** with modular 
 - `themeSlice`: Persists user's dark/light preference across browser sessions (`cineglass_theme`).
 - `settingsSlice`: Stores custom TMDb API keys and in-app preferences.
 
-### 3. API Integration (The Movie Database - TMDb)
+### 3. Supabase Cloud Database & Authentication
+- **User Authentication**: Secure Sign-Up and Sign-In with email and password via Supabase Auth (`supabase.auth.signUp`, `supabase.auth.signInWithPassword`), with automatic token persistence and session restoration.
+- **Cloud-Synced Watchlist (PostgreSQL Database)**: Persistent `public.favorites` table storing each user's favorited movies with Row-Level Security (RLS) policies (`auth.uid() = user_id`).
+- **Optimistic UI Updates**: Instantaneous 1-click addition/removal in Redux with seamless background synchronization to the Supabase database.
+- **Graceful Offline & Demo Fallback**: Works effortlessly in full local storage mode if Supabase is not yet configured, with instant 1-click evaluator login.
+- **In-App Cloud Configurator**: Evaluators can enter custom Supabase project credentials in the Settings modal with live connectivity verification and copy-pasteable PostgreSQL schema scripts.
+
+### 4. API Integration (The Movie Database - TMDb)
 Referenced from: `https://developer.themoviedb.org/reference/getting-started`
 - **Real-Time TMDb v3 Integration**:
   - Trending movies: `GET /3/trending/movie/{time_window}` (day/week)
@@ -52,7 +59,7 @@ Referenced from: `https://developer.themoviedb.org/reference/getting-started`
 - **Real-Time TMDb Endpoints**: All catalog data, trailers, and cast credits are queried live from TMDb. If an error occurs (such as an invalid API key or network interruption), standard resilient error boundaries and informative alerts are presented.
 - **In-App API Key Manager**: Evaluators can open Settings to test or paste their own personal TMDb API key with live verification feedback.
 
-### 4. Search & Bonus Features
+### 5. Search & Bonus Features
 - **Instant Search with Debounce**: 450ms debounce mechanism preventing wasteful API calls.
 - **Search History Persistence**: The user's last searched movie is automatically stored in `localStorage` and displayed as a clickable chip for 1-tap restore.
 - **Infinite Scrolling & "Load More" Toggle**: Built-in `IntersectionObserver` sentinel for seamless infinite scrolling, with a toggle to switch to a **"Load More"** button mode for alternative UX.
@@ -66,6 +73,7 @@ Referenced from: `https://developer.themoviedb.org/reference/getting-started`
 | Technology | Purpose |
 | :--- | :--- |
 | **React 19** | Component-driven UI library |
+| **Supabase (@supabase/supabase-js)** | PostgreSQL cloud database for user Watchlist and JWT authentication |
 | **Redux Toolkit & React-Redux** | Global predictable state management with persistent slices |
 | **Material-UI (MUI v6 / v9)** | Component foundation, styling engine, and theme tokens |
 | **React Router v7** | Client-side routing (`/`, `/movies`, `/series`, `/search`, `/favorites`, `/movie/:id`, `/login`) |
@@ -79,17 +87,21 @@ Referenced from: `https://developer.themoviedb.org/reference/getting-started`
 ```
 loon-labs/
 ├── public/
+├── supabase/
+│   └── schema.sql            # PostgreSQL table schema & RLS policies
 ├── src/
 │   ├── api/
 │   │   ├── axiosClient.js        # Configured Axios instance with interceptors
 │   │   └── tmdbApi.js            # Pure TMDb API v3 service endpoints
 │   ├── app/
 │   │   └── store.js              # Redux store configuration
+│   ├── services/
+│   │   └── supabaseClient.js     # Supabase client, Auth, and DB functions
 │   ├── features/
-│   │   ├── auth/                 # Authentication state & actions
-│   │   ├── favorites/            # Watchlist with localStorage sync
+│   │   ├── auth/                 # Supabase authentication state & thunks
+│   │   ├── favorites/            # Watchlist with Supabase cloud DB sync & local storage
 │   │   ├── movies/               # Trending, Search, Filters, Details, Trailers
-│   │   ├── settings/             # Custom API key & user preferences
+│   │   ├── settings/             # Custom API key, Supabase config & user preferences
 │   │   └── theme/                # Dark/Light theme mode state
 │   ├── components/
 │   │   ├── common/
@@ -111,17 +123,17 @@ loon-labs/
 │   │   │   ├── SearchBar.jsx     # Debounced input with last search chip
 │   │   │   └── FilterBar.jsx     # Genre, year, rating, and sort controls
 │   │   ├── auth/
-│   │   └── LoginModal.jsx      # Glassmorphism login dialog with demo login
+│   │   │   └── LoginModal.jsx    # Supabase Auth dialog (Sign in & Sign up)
 │   │   └── settings/
-│   │       └── SettingsModal.jsx # API key tester & configuration modal
+│   │       └── SettingsModal.jsx # TMDb & Supabase tester & configuration modal
 │   ├── pages/
 │   │   ├── HomePage.jsx          # Hero + Trending + Now Playing + Top Rated
 │   │   ├── MoviesPage.jsx        # Explore movies with full filter bar & grid
 │   │   ├── SeriesPage.jsx        # TV series collection
 │   │   ├── SearchPage.jsx        # Search with infinite scroll / load more
-│   │   ├── FavoritesPage.jsx     # Saved Watchlist with empty states
+│   │   ├── FavoritesPage.jsx     # Cloud-synced Watchlist with Supabase indicator
 │   │   ├── MovieDetailsPage.jsx  # Dedicated deep-linkable movie page (/movie/:id)
-│   │   ├── LoginPage.jsx         # Dedicated full-page login route
+│   │   ├── LoginPage.jsx         # Dedicated full-page login & registration route
 │   │   └── NotFoundPage.jsx      # 404 page with return CTA
 │   ├── theme/
 │   │   └── theme.js              # MUI custom design tokens (Dark & Light glass)
@@ -190,25 +202,30 @@ The production bundle will be output to the `dist/` folder.
 
 ## 🧪 Evaluator Quick-Test Guide
 
-1. **Test Authentication**:
-   - Click the user icon in the top navbar or visit `/login`.
-   - Click **"1-Click Demo Login"** to immediately authenticate as a test user.
-2. **Test Search & Persistence**:
+1. **Test Supabase Authentication & Sign Up**:
+   - Click the user icon in the top navbar or navigate to `/login`.
+   - Switch between **"Sign In"** and **"Create Account"** tabs.
+   - Or click **"1-Click Evaluator Login"** to immediately authenticate as a test user.
+   - When authenticated, notice the user capsule displays your display name and role.
+2. **Test Supabase Watchlist & Database Sync**:
+   - Click the `(+)` button on any movie poster (or inside the details sheet).
+   - Navigate to **"List"** (`/favorites`) in the top navigation.
+   - Notice the green badge indicating your library is synced with Supabase Cloud DB.
+   - Items update optimistically and persist across browser reloads and devices.
+3. **Test In-App Supabase & TMDb Configurator**:
+   - Click the Settings gear icon in the navbar.
+   - You can view the pre-formatted PostgreSQL SQL schema script with Row-Level Security (RLS) policies.
+   - You can test live database connectivity or enter custom Supabase project credentials.
+4. **Test Search & Debounce Persistence**:
    - Go to Search (`/search`). Type `"Spider-Man"` or `"Avengers"`.
    - Refresh the page: notice your last search query is preserved and rendered as a quick-filter chip.
-3. **Test Infinite Scroll vs. Load More**:
+5. **Test Infinite Scroll vs. Load More**:
    - In Search, toggle the **"Infinite Scroll Active"** switch to test both infinite scroll and manual **"Load More"** button mode.
-4. **Test Watchlist & Local Storage**:
-   - Click the `(+)` button on any poster.
-   - Navigate to **"List"** in the top navigation to see your saved movies persist across reloads.
-5. **Test Interactive Details Sheet & YouTube Trailer**:
+6. **Test Interactive Details Sheet & YouTube Trailer**:
    - Click any movie poster to open the interactive details sheet matching the Figma design specifications.
    - Click **"Watch Trailer"** to play the real YouTube trailer retrieved from TMDb.
-6. **Test Light / Dark Mode**:
+7. **Test Light / Dark Mode**:
    - Click the sun/moon icon in the top floating capsule to toggle between dark glass and light frosted glass.
-7. **Test Custom API Key**:
-   - Click the Settings gear icon in the navbar.
-   - You can test live API connectivity or insert your own TMDb v3 key.
 
 ---
 
