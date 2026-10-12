@@ -99,20 +99,22 @@ export default function LoginModal() {
       onClose={() => dispatch(closeLoginModal())}
       maxWidth="xs"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 4,
-          backgroundColor: isDark
-            ? 'rgba(16, 20, 29, 0.96)'
-            : 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(30px)',
-          WebkitBackdropFilter: 'blur(30px)',
-          border: `1px solid ${
-            isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
-          }`,
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
-          p: { xs: 2, sm: 3 },
-          position: 'relative',
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 4,
+            backgroundColor: isDark
+              ? 'rgba(16, 20, 29, 0.96)'
+              : 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
+            border: `1px solid ${
+              isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
+            }`,
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
+            p: { xs: 2, sm: 3 },
+            position: 'relative',
+          },
         },
       }}
     >
@@ -175,12 +177,14 @@ export default function LoginModal() {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="e.g. adithya or intern@loonlabs.com"
             sx={textFieldSx}
-            InputProps={{
-              startAdornment: (
-                <PersonOutlineRoundedIcon
-                  sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
-                />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <PersonOutlineRoundedIcon
+                    sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
+                  />
+                ),
+              },
             }}
           />
 
@@ -192,12 +196,14 @@ export default function LoginModal() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             sx={textFieldSx}
-            InputProps={{
-              startAdornment: (
-                <LockOutlinedIcon
-                  sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
-                />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <LockOutlinedIcon
+                    sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
+                  />
+                ),
+              },
             }}
           />
 

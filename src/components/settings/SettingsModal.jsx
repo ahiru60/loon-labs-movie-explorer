@@ -72,19 +72,21 @@ export default function SettingsModal() {
       onClose={() => dispatch(closeSettingsModal())}
       maxWidth="sm"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 4,
-          backgroundColor: isDark
-            ? 'rgba(16, 20, 29, 0.96)'
-            : 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(30px)',
-          border: `1px solid ${
-            isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
-          }`,
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
-          p: { xs: 2, sm: 3 },
-          position: 'relative',
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 4,
+            backgroundColor: isDark
+              ? 'rgba(16, 20, 29, 0.96)'
+              : 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(30px)',
+            border: `1px solid ${
+              isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
+            }`,
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
+            p: { xs: 2, sm: 3 },
+            position: 'relative',
+          },
         },
       }}
     >

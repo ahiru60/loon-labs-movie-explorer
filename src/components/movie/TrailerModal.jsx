@@ -18,13 +18,15 @@ export default function TrailerModal() {
       onClose={() => dispatch(closeTrailerModal())}
       maxWidth="lg"
       fullWidth
-      PaperProps={{
-        sx: {
-          backgroundColor: '#000000',
-          borderRadius: 4,
-          overflow: 'hidden',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: '#000000',
+            borderRadius: 4,
+            overflow: 'hidden',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+          },
         },
       }}
     >

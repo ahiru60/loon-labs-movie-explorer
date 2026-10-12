@@ -140,12 +140,14 @@ export default function LoginPage() {
                   : 'rgba(0, 0, 0, 0.04)',
               },
             }}
-            InputProps={{
-              startAdornment: (
-                <PersonOutlineRoundedIcon
-                  sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
-                />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <PersonOutlineRoundedIcon
+                    sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
+                  />
+                ),
+              },
             }}
           />
 
@@ -165,12 +167,14 @@ export default function LoginPage() {
                   : 'rgba(0, 0, 0, 0.04)',
               },
             }}
-            InputProps={{
-              startAdornment: (
-                <LockOutlinedIcon
-                  sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
-                />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <LockOutlinedIcon
+                    sx={{ color: '#818cf8', mr: 1, fontSize: '1.2rem' }}
+                  />
+                ),
+              },
             }}
           />
 

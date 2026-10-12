@@ -133,23 +133,25 @@ export default function MovieDetailsModal() {
       maxWidth="md"
       fullWidth
       scroll="body"
-      PaperProps={{
-        sx: {
-          borderRadius: { xs: '24px 24px 0 0', sm: '24px' },
-          backgroundColor: isDark
-            ? 'rgba(13, 16, 24, 0.96)'
-            : 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(35px)',
-          WebkitBackdropFilter: 'blur(35px)',
-          border: `1px solid ${
-            isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
-          }`,
-          boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)',
-          overflow: 'hidden',
-          m: { xs: 0, sm: 2 },
-          position: { xs: 'fixed', sm: 'relative' },
-          bottom: { xs: 0, sm: 'auto' },
-          maxHeight: { xs: '90vh', sm: '88vh' },
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: { xs: '24px 24px 0 0', sm: '24px' },
+            backgroundColor: isDark
+              ? 'rgba(13, 16, 24, 0.96)'
+              : 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(35px)',
+            WebkitBackdropFilter: 'blur(35px)',
+            border: `1px solid ${
+              isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
+            }`,
+            boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)',
+            overflow: 'hidden',
+            m: { xs: 0, sm: 2 },
+            position: { xs: 'fixed', sm: 'relative' },
+            bottom: { xs: 0, sm: 'auto' },
+            maxHeight: { xs: '90vh', sm: '88vh' },
+          },
         },
       }}
     >

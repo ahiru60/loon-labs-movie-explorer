@@ -354,18 +354,20 @@ export default function GlassNavbar() {
         anchorEl={notifAnchor}
         open={Boolean(notifAnchor)}
         onClose={handleCloseNotifMenu}
-        PaperProps={{
-          sx: {
-            mt: 1.5,
-            width: 320,
-            borderRadius: 3,
-            backgroundColor: isDark
-              ? 'rgba(18, 20, 28, 0.95)'
-              : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}`,
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
-            p: 1,
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1.5,
+              width: 320,
+              borderRadius: 3,
+              backgroundColor: isDark
+                ? 'rgba(18, 20, 28, 0.95)'
+                : 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}`,
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
+              p: 1,
+            },
           },
         }}
       >
@@ -434,18 +436,20 @@ export default function GlassNavbar() {
         anchorEl={userMenuAnchor}
         open={Boolean(userMenuAnchor)}
         onClose={handleCloseUserMenu}
-        PaperProps={{
-          sx: {
-            mt: 1.5,
-            minWidth: 200,
-            borderRadius: 3,
-            backgroundColor: isDark
-              ? 'rgba(18, 20, 28, 0.95)'
-              : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}`,
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
-            p: 1,
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1.5,
+              minWidth: 200,
+              borderRadius: 3,
+              backgroundColor: isDark
+                ? 'rgba(18, 20, 28, 0.95)'
+                : 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}`,
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
+              p: 1,
+            },
           },
         }}
       >
