@@ -1,17 +1,20 @@
 import axios from 'axios';
 import { loadFromStorage } from '../utils/localStorage';
 
-// Default working key or env variable
-const DEFAULT_API_KEY = import.meta.env.VITE_TMDB_API_KEY || '4e44d9029b1270a757cddc766a1bcb63';
-const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL || 'https://api.themoviedb.org/3';
+// Read exclusively from environment variable or custom user settings (NEVER HARDCODE)
+const ENV_API_KEY = (import.meta.env.VITE_TMDB_API_KEY || '').trim();
+const BASE_URL = (import.meta.env.VITE_TMDB_BASE_URL || 'https://api.themoviedb.org/3').trim();
 
+/**
+ * Resolves active TMDb API Key from runtime settings or environment.
+ * Prioritizes user-specified custom key, then environment variable.
+ */
 export const getActiveApiKey = () => {
-  // Check if user set a custom key in localStorage settings
   const customKey = loadFromStorage('cineglass_custom_tmdb_key', null);
-  if (customKey && customKey.trim().length > 10) {
+  if (customKey && typeof customKey === 'string' && customKey.trim().length > 10) {
     return customKey.trim();
   }
-  return DEFAULT_API_KEY;
+  return ENV_API_KEY;
 };
 
 const axiosClient = axios.create({
@@ -22,30 +25,40 @@ const axiosClient = axios.create({
   },
 });
 
-// Request interceptor: automatically append api_key
+// Request interceptor: automatically append sanitized api_key
 axiosClient.interceptors.request.use(
   (config) => {
+    const key = getActiveApiKey();
+    if (!key) {
+      return Promise.reject(new Error('Missing TMDb API Key. Please configure VITE_TMDB_API_KEY in your .env file or Settings modal.'));
+    }
     config.params = {
       ...config.params,
-      api_key: getActiveApiKey(),
+      api_key: key,
     };
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor: graceful error normalization
+// Response interceptor: graceful error normalization & security sanitization
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    const formattedError = {
-      status: error.response?.status || 500,
-      message:
-        error.response?.data?.status_message ||
-        error.message ||
-        'Unable to communicate with TMDb servers. Please check your network or API key.',
-    };
-    return Promise.reject(formattedError);
+    // Sanitize error: never leak authorization keys or raw request parameters in error object
+    const status = error.response?.status || 500;
+    let message = 'Unable to communicate with TMDb servers. Please check your network or API key configuration.';
+
+    if (error.response?.data?.status_message) {
+      message = error.response.data.status_message;
+    } else if (error.message && !error.message.includes('key')) {
+      message = error.message;
+    }
+
+    return Promise.reject({
+      status,
+      message,
+    });
   }
 );
 

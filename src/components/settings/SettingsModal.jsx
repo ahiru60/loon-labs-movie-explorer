@@ -98,8 +98,12 @@ export default function SettingsModal() {
   };
 
   const handleTestTmdb = async () => {
-    const keyToTest = inputKey.trim() || '4e44d9029b1270a757cddc766a1bcb63';
-    setTmdbStatus('testing');
+    const keyToTest = inputKey.trim() || (import.meta.env.VITE_TMDB_API_KEY || '').trim();
+    if (!keyToTest) {
+      setTmdbStatus('error');
+      return;
+    }
+    setTestStatus('testing');
     try {
       const res = await fetch(
         `https://api.themoviedb.org/3/trending/movie/week?api_key=${keyToTest}`

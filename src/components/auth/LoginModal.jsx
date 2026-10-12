@@ -30,6 +30,7 @@ import {
 } from '../../features/auth/authSlice';
 import { openSettingsModal } from '../../features/settings/settingsSlice';
 import GlassButton from '../common/GlassButton';
+import { validateEmail, validatePassword, sanitizeText } from '../../utils/validation';
 
 export default function LoginModal() {
   const dispatch = useDispatch();
@@ -57,16 +58,17 @@ export default function LoginModal() {
     setFormError('');
     dispatch(clearAuthMessages());
 
-    if (!email.trim()) {
-      setFormError('Please enter your email address.');
+    // Validate Email
+    const emailResult = validateEmail(email);
+    if (!emailResult.isValid) {
+      setFormError(emailResult.error);
       return;
     }
-    if (!password.trim()) {
-      setFormError('Please enter your password.');
-      return;
-    }
-    if (password.length < 6) {
-      setFormError('Password must be at least 6 characters.');
+
+    // Validate Password
+    const passwordResult = validatePassword(password);
+    if (!passwordResult.isValid) {
+      setFormError(passwordResult.error);
       return;
     }
 
@@ -74,17 +76,18 @@ export default function LoginModal() {
       // Sign In
       dispatch(
         loginWithSupabase({
-          email: email.trim(),
+          email: emailResult.sanitized,
           password: password.trim(),
         })
       );
     } else {
-      // Sign Up
+      // Sign Up with sanitized display name
+      const sanitizedName = sanitizeText(displayName, 50);
       dispatch(
         signupWithSupabase({
-          email: email.trim(),
+          email: emailResult.sanitized,
           password: password.trim(),
-          displayName: displayName.trim(),
+          displayName: sanitizedName,
         })
       );
     }

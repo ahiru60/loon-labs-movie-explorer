@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { loadFromStorage, saveToStorage } from '../utils/localStorage';
+import { sanitizeText, isValidId } from '../utils/validation';
 
 export const SUPABASE_URL_KEY = 'cineglass_supabase_url';
 export const SUPABASE_ANON_KEY_KEY = 'cineglass_supabase_anon_key';
@@ -181,33 +182,37 @@ export const supabaseOnAuthStateChange = (callback) => {
  */
 export const supabaseGetFavorites = async (userId) => {
   const client = getSupabase();
-  if (!client || !userId) return [];
+  if (!client || !userId || !isValidId(userId)) return [];
 
-  const { data, error } = await client
-    .from('favorites')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+  try {
+    const { data, error } = await client
+      .from('favorites')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    console.warn('Error fetching favorites from Supabase:', error.message);
-    throw error;
+    if (error) {
+      console.warn('Error fetching favorites:', error.message);
+      throw new Error('Unable to retrieve watchlist from database.');
+    }
+
+    // Map database columns to app movie card structure with sanitization
+    return (data || []).map((row) => ({
+      id: Number(row.movie_id),
+      title: sanitizeText(row.title, 200),
+      name: sanitizeText(row.title, 200),
+      poster_path: row.poster_path,
+      backdrop_path: row.backdrop_path,
+      vote_average: Math.min(10, Math.max(0, Number(row.vote_average) || 0)),
+      release_date: row.release_date,
+      first_air_date: row.release_date,
+      overview: sanitizeText(row.overview || '', 1000),
+      media_type: row.media_type === 'tv' ? 'tv' : 'movie',
+      created_at: row.created_at,
+    }));
+  } catch (err) {
+    throw new Error(err.message || 'Database query failed.');
   }
-
-  // Map database columns to app movie card structure
-  return (data || []).map((row) => ({
-    id: Number(row.movie_id),
-    title: row.title,
-    name: row.title,
-    poster_path: row.poster_path,
-    backdrop_path: row.backdrop_path,
-    vote_average: Number(row.vote_average) || 0,
-    release_date: row.release_date,
-    first_air_date: row.release_date,
-    overview: row.overview || '',
-    media_type: row.media_type || 'movie',
-    created_at: row.created_at,
-  }));
 };
 
 /**
@@ -215,30 +220,36 @@ export const supabaseGetFavorites = async (userId) => {
  */
 export const supabaseAddFavorite = async (userId, movie) => {
   const client = getSupabase();
-  if (!client || !userId || !movie) return null;
+  if (!client || !userId || !isValidId(userId) || !movie || !isValidId(movie.id)) {
+    return null;
+  }
 
-  const row = {
+  const sanitizedRow = {
     user_id: userId,
-    movie_id: movie.id,
-    title: movie.title || movie.name || 'Untitled',
-    poster_path: movie.poster_path || null,
-    backdrop_path: movie.backdrop_path || null,
-    vote_average: Number(movie.vote_average) || 0,
+    movie_id: Math.floor(Number(movie.id)),
+    title: sanitizeText(movie.title || movie.name || 'Untitled', 200),
+    poster_path: movie.poster_path ? String(movie.poster_path).slice(0, 255) : null,
+    backdrop_path: movie.backdrop_path ? String(movie.backdrop_path).slice(0, 255) : null,
+    vote_average: Math.min(10, Math.max(0, Number(movie.vote_average) || 0)),
     release_date: movie.release_date || movie.first_air_date || null,
-    overview: movie.overview || '',
-    media_type: movie.media_type || 'movie',
+    overview: sanitizeText(movie.overview || '', 1000),
+    media_type: movie.media_type === 'tv' ? 'tv' : 'movie',
     created_at: new Date().toISOString(),
   };
 
-  const { data, error } = await client
-    .from('favorites')
-    .upsert(row, { onConflict: 'user_id,movie_id' });
+  try {
+    const { data, error } = await client
+      .from('favorites')
+      .upsert(sanitizedRow, { onConflict: 'user_id,movie_id' });
 
-  if (error) {
-    console.warn('Error adding favorite to Supabase:', error.message);
-    throw error;
+    if (error) {
+      console.warn('Error adding favorite:', error.message);
+      throw new Error('Unable to save item to database.');
+    }
+    return data;
+  } catch (err) {
+    throw new Error(err.message || 'Database insert failed.');
   }
-  return data;
 };
 
 /**
@@ -246,19 +257,26 @@ export const supabaseAddFavorite = async (userId, movie) => {
  */
 export const supabaseRemoveFavorite = async (userId, movieId) => {
   const client = getSupabase();
-  if (!client || !userId || !movieId) return null;
-
-  const { data, error } = await client
-    .from('favorites')
-    .delete()
-    .eq('user_id', userId)
-    .eq('movie_id', movieId);
-
-  if (error) {
-    console.warn('Error removing favorite from Supabase:', error.message);
-    throw error;
+  if (!client || !userId || !isValidId(userId) || !movieId || !isValidId(movieId)) {
+    return null;
   }
-  return data;
+
+  try {
+    const numericMovieId = Math.floor(Number(movieId));
+    const { data, error } = await client
+      .from('favorites')
+      .delete()
+      .eq('user_id', userId)
+      .eq('movie_id', numericMovieId);
+
+    if (error) {
+      console.warn('Error removing favorite:', error.message);
+      throw new Error('Unable to remove item from database.');
+    }
+    return data;
+  } catch (err) {
+    throw new Error(err.message || 'Database delete failed.');
+  }
 };
 
 /**
@@ -266,28 +284,38 @@ export const supabaseRemoveFavorite = async (userId, movieId) => {
  */
 export const supabaseSyncFavorites = async (userId, localFavorites = []) => {
   const client = getSupabase();
-  if (!client || !userId || !localFavorites.length) return [];
-
-  const rows = localFavorites.map((movie) => ({
-    user_id: userId,
-    movie_id: movie.id,
-    title: movie.title || movie.name || 'Untitled',
-    poster_path: movie.poster_path || null,
-    backdrop_path: movie.backdrop_path || null,
-    vote_average: Number(movie.vote_average) || 0,
-    release_date: movie.release_date || movie.first_air_date || null,
-    overview: movie.overview || '',
-    media_type: movie.media_type || 'movie',
-    created_at: new Date().toISOString(),
-  }));
-
-  const { data, error } = await client
-    .from('favorites')
-    .upsert(rows, { onConflict: 'user_id,movie_id' });
-
-  if (error) {
-    console.warn('Error syncing favorites to Supabase:', error.message);
-    throw error;
+  if (!client || !userId || !isValidId(userId) || !Array.isArray(localFavorites) || !localFavorites.length) {
+    return [];
   }
-  return data;
+
+  const validRows = localFavorites
+    .filter((movie) => movie && isValidId(movie.id))
+    .map((movie) => ({
+      user_id: userId,
+      movie_id: Math.floor(Number(movie.id)),
+      title: sanitizeText(movie.title || movie.name || 'Untitled', 200),
+      poster_path: movie.poster_path ? String(movie.poster_path).slice(0, 255) : null,
+      backdrop_path: movie.backdrop_path ? String(movie.backdrop_path).slice(0, 255) : null,
+      vote_average: Math.min(10, Math.max(0, Number(movie.vote_average) || 0)),
+      release_date: movie.release_date || movie.first_air_date || null,
+      overview: sanitizeText(movie.overview || '', 1000),
+      media_type: movie.media_type === 'tv' ? 'tv' : 'movie',
+      created_at: new Date().toISOString(),
+    }));
+
+  if (!validRows.length) return [];
+
+  try {
+    const { data, error } = await client
+      .from('favorites')
+      .upsert(validRows, { onConflict: 'user_id,movie_id' });
+
+    if (error) {
+      console.warn('Error syncing favorites:', error.message);
+      throw new Error('Unable to synchronize watchlist.');
+    }
+    return data;
+  } catch (err) {
+    throw new Error(err.message || 'Database synchronization failed.');
+  }
 };

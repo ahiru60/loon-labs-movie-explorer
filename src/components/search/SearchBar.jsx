@@ -15,6 +15,7 @@ import {
   searchMovies,
   clearSearch,
 } from '../../features/movies/moviesSlice';
+import { sanitizeSearchQuery } from '../../utils/validation';
 
 export default function SearchBar({ onSearchSubmit, autoFocus = false }) {
   const dispatch = useDispatch();
@@ -32,9 +33,10 @@ export default function SearchBar({ onSearchSubmit, autoFocus = false }) {
   // Debounced search effect
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (inputValue.trim()) {
-        dispatch(setSearchQuery(inputValue));
-        dispatch(searchMovies({ query: inputValue, page: 1 }));
+      const sanitized = sanitizeSearchQuery(inputValue);
+      if (sanitized) {
+        dispatch(setSearchQuery(sanitized));
+        dispatch(searchMovies({ query: sanitized, page: 1 }));
       }
     }, 450);
 
@@ -47,17 +49,19 @@ export default function SearchBar({ onSearchSubmit, autoFocus = false }) {
   };
 
   const handleLastSearchClick = (query) => {
-    setInputValue(query);
-    dispatch(setSearchQuery(query));
-    dispatch(searchMovies({ query, page: 1 }));
+    const sanitized = sanitizeSearchQuery(query);
+    setInputValue(sanitized);
+    dispatch(setSearchQuery(sanitized));
+    dispatch(searchMovies({ query: sanitized, page: 1 }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (inputValue.trim()) {
-      dispatch(setSearchQuery(inputValue));
-      dispatch(searchMovies({ query: inputValue, page: 1 }));
-      if (onSearchSubmit) onSearchSubmit(inputValue);
+    const sanitized = sanitizeSearchQuery(inputValue);
+    if (sanitized) {
+      dispatch(setSearchQuery(sanitized));
+      dispatch(searchMovies({ query: sanitized, page: 1 }));
+      if (onSearchSubmit) onSearchSubmit(sanitized);
     }
   };
 
