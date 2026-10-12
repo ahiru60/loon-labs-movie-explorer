@@ -37,6 +37,8 @@ export default function MovieCard({ movie, priority = false }) {
       sx={{
         position: 'relative',
         width: '100%',
+        minWidth: 0,
+        maxWidth: '100%',
         cursor: 'pointer',
         borderRadius: '16px',
         overflow: 'hidden',
@@ -140,25 +142,34 @@ export default function MovieCard({ movie, priority = false }) {
       </Box>
 
       {/* Title & Metadata beneath poster */}
-      <Box sx={{ pt: 1.2, px: 0.5 }}>
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{
-            fontWeight: 700,
-            fontSize: '0.92rem',
-            color: isDark ? '#ffffff' : '#0f172a',
-            letterSpacing: '-0.01em',
-          }}
-        >
-          {title}
-        </Typography>
+      <Box sx={{ pt: 1.2, px: 0.5, width: '100%', minWidth: 0, overflow: 'hidden' }}>
+        <Tooltip title={title} placement="top" arrow enterDelay={400}>
+          <Typography
+            variant="subtitle2"
+            noWrap
+            sx={{
+              fontWeight: 700,
+              fontSize: '0.92rem',
+              color: isDark ? '#ffffff' : '#0f172a',
+              letterSpacing: '-0.01em',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              display: 'block',
+              width: '100%',
+            }}
+          >
+            {title}
+          </Typography>
+        </Tooltip>
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             mt: 0.3,
+            width: '100%',
+            minWidth: 0,
           }}
         >
           <Typography
@@ -166,6 +177,7 @@ export default function MovieCard({ movie, priority = false }) {
             sx={{
               color: isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
               fontWeight: 500,
+              flexShrink: 0,
             }}
           >
             {releaseYear}
@@ -177,6 +189,7 @@ export default function MovieCard({ movie, priority = false }) {
               fontWeight: 600,
               textTransform: 'uppercase',
               fontSize: '0.68rem',
+              flexShrink: 0,
             }}
           >
             {movie.media_type === 'tv' ? 'Series' : 'Movie'}

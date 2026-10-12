@@ -43,7 +43,15 @@ export function MovieRowSkeleton() {
       />
       <Box sx={{ display: 'flex', gap: 2.5, overflow: 'hidden' }}>
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <Box key={i} sx={{ minWidth: { xs: 150, sm: 190, md: 220 } }}>
+          <Box
+            key={i}
+            sx={{
+              flex: { xs: '0 0 150px', sm: '0 0 185px', md: '0 0 215px', lg: '0 0 225px' },
+              width: { xs: '150px', sm: '185px', md: '215px', lg: '225px' },
+              minWidth: { xs: '150px', sm: '185px', md: '215px', lg: '225px' },
+              maxWidth: { xs: '150px', sm: '185px', md: '215px', lg: '225px' },
+            }}
+          >
             <MovieCardSkeleton />
           </Box>
         ))}

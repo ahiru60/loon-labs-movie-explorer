@@ -116,6 +116,7 @@ export default function MovieRow({
           className="hide-scrollbar"
           sx={{
             display: 'flex',
+            alignItems: 'flex-start',
             gap: { xs: 2, sm: 2.5, md: 3 },
             overflowX: 'auto',
             scrollSnapType: 'x mandatory',
@@ -124,16 +125,35 @@ export default function MovieRow({
             '& > *': {
               scrollSnapAlign: 'start',
               flex: {
-                xs: '0 0 145px',
+                xs: '0 0 150px',
                 sm: '0 0 185px',
                 md: '0 0 215px',
-                lg: '0 0 230px',
+                lg: '0 0 225px',
               },
+              width: {
+                xs: '150px',
+                sm: '185px',
+                md: '215px',
+                lg: '225px',
+              },
+              minWidth: {
+                xs: '150px',
+                sm: '185px',
+                md: '215px',
+                lg: '225px',
+              },
+              maxWidth: {
+                xs: '150px',
+                sm: '185px',
+                md: '215px',
+                lg: '225px',
+              },
+              boxSizing: 'border-box',
             },
           }}
         >
           {movies.map((movie) => (
-            <Box key={movie.id}>
+            <Box key={movie.id} sx={{ minWidth: 0, width: '100%', overflow: 'hidden' }}>
               <MovieCard movie={movie} />
             </Box>
           ))}
