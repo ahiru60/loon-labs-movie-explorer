@@ -257,14 +257,14 @@ export default function HeroBanner({ movies = [] }) {
             gap: 1.5,
           }}
         >
-          {/* ▶ Play Button */}
+          {/* ▶ Watch Trailer Button */}
           <GlassButton
             variant="primary"
             onClick={handlePlay}
             startIcon={<PlayArrowRoundedIcon sx={{ fontSize: '1.4rem' }} />}
             sx={{ px: 3, py: 1 }}
           >
-            Play
+            Watch Trailer
           </GlassButton>
 
           {/* (i) Details Button */}

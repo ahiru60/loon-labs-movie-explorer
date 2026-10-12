@@ -22,7 +22,7 @@ All movie data, TV series, genres, cast credits, official YouTube trailers, and 
 ### 1. User Interface (UI) & Modern Glassmorphic Design
 - **Floating Glass Capsule Navigation**: Floating capsule header with blur backdrop (`backdrop-filter: blur(28px)`), navigation tabs, search shortcut, notifications, settings gear, and profile avatar.
 - **Mobile-First Responsive Dock**: On mobile viewports, the app renders a floating bottom glass dock for ergonomic one-handed navigation.
-- **Cinematic Hero Carousel**: Full-bleed backdrop showcasing live top trending films from TMDb with multi-stop dark gradients, release year, runtime, IMDb score badge, synopsis, and action buttons (`▶ Play Trailer`, `(i) Details`, `(+) Watchlist`).
+- **Cinematic Hero Carousel**: Full-bleed backdrop showcasing live top trending films from TMDb with multi-stop dark gradients, release year, runtime, IMDb score badge, synopsis, and action buttons (`▶ Watch Trailer`, `(i) Details`, `(+) Watchlist`).
 - **Interactive Poster Cards**: Sleek 16px rounded-corner cards with smooth hover elevation (`scale(1.03)` + glow shadow), golden rating badge, and 1-click `(+)` / `(✓)` watchlist toggle.
 - **Interactive Details Sheet (Matching Figma)**: Interactive bottom sheet with curved corners, drag handle indicator, high-res backdrop header, category tags, IMDb score, certification, full synopsis, and top-billed cast avatar cards with headshots fetched directly from TMDb.
 - **Light & Dark Mode**: One-click theme toggle switching between deep midnight dark glass (`#07080c`) and frosted slate light glass (`#f5f7fb`).
