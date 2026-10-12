@@ -15,9 +15,7 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
-import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import {
   closeDetailModal,
@@ -35,7 +33,6 @@ import GlassButton from '../common/GlassButton';
 
 export default function MovieDetailsModal() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { isDetailModalOpen, selectedMovie } = useSelector((state) => state.movies);
   const favorites = useSelector((state) => state.favorites.favorites);
@@ -129,11 +126,6 @@ export default function MovieDetailsModal() {
 
   const handleToggleFavorite = () => {
     dispatch(toggleFavorite(current));
-  };
-
-  const handleOpenDedicatedPage = () => {
-    dispatch(closeDetailModal());
-    navigate(`/movie/${current.id}`);
   };
 
   return (
@@ -465,26 +457,6 @@ export default function MovieDetailsModal() {
             >
               {isFavorited ? 'In My List' : 'Add to Watchlist'}
             </GlassButton>
-
-            {/* Dedicated Details Page Link */}
-            <IconButton
-              onClick={handleOpenDedicatedPage}
-              sx={{
-                width: 44,
-                height: 44,
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                color: '#ffffff',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  transform: 'scale(1.08)',
-                },
-              }}
-              title="Open full page view"
-            >
-              <OpenInNewRoundedIcon sx={{ fontSize: '1.2rem' }} />
-            </IconButton>
           </Box>
 
           {/* Overview / Synopsis */}
