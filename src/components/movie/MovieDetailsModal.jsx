@@ -142,7 +142,12 @@ export default function MovieDetailsModal() {
       onClose={() => dispatch(closeDetailModal())}
       maxWidth="md"
       fullWidth
-      scroll="body"
+      scroll="paper"
+      sx={{
+        '& .MuiDialog-container': {
+          alignItems: { xs: 'flex-end', sm: 'center' },
+        },
+      }}
       slotProps={{
         paper: {
           sx: {
@@ -156,11 +161,13 @@ export default function MovieDetailsModal() {
               isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
             }`,
             boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)',
-            overflow: 'hidden',
             m: { xs: 0, sm: 2 },
-            position: { xs: 'fixed', sm: 'relative' },
-            bottom: { xs: 0, sm: 'auto' },
+            position: 'relative',
             maxHeight: { xs: '90vh', sm: '88vh' },
+            height: { xs: '90vh', sm: 'auto' },
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
           },
         },
       }}
@@ -177,6 +184,7 @@ export default function MovieDetailsModal() {
           left: 0,
           right: 0,
           zIndex: 20,
+          pointerEvents: 'none',
         }}
       >
         <Box
@@ -213,13 +221,44 @@ export default function MovieDetailsModal() {
         <CloseRoundedIcon sx={{ fontSize: '1.2rem' }} />
       </IconButton>
 
-      <DialogContent sx={{ p: 0, overflowY: 'auto' }}>
+      <DialogContent
+        sx={{
+          p: 0,
+          flex: '1 1 auto',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          overscrollBehavior: 'contain',
+          /* Sleek visible scrollbar when content cuts out / overflows */
+          scrollbarWidth: 'thin',
+          scrollbarColor: isDark
+            ? 'rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.04)'
+            : 'rgba(0, 0, 0, 0.28) rgba(0, 0, 0, 0.04)',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
+            borderRadius: '9999px',
+            margin: '8px 0',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: isDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(0, 0, 0, 0.28)',
+            borderRadius: '9999px',
+            border: '2px solid transparent',
+            backgroundClip: 'padding-box',
+            transition: 'background 0.2s',
+            '&:hover': {
+              background: isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
+            },
+          },
+        }}
+      >
         {/* Backdrop Banner Header with Gradient */}
         <Box
           sx={{
             position: 'relative',
             width: '100%',
-            height: { xs: 260, sm: 380, md: 440 },
+            height: { xs: 240, sm: 330, md: 380 },
             overflow: 'hidden',
           }}
         >

@@ -165,6 +165,10 @@ export default function LoginModal() {
             boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
             p: { xs: 2, sm: 3 },
             position: 'relative',
+            maxHeight: '90vh',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
           },
         },
       }}
@@ -182,7 +186,23 @@ export default function LoginModal() {
         <CloseRoundedIcon />
       </IconButton>
 
-      <DialogContent sx={{ p: 1 }}>
+      <DialogContent
+        sx={{
+          p: 1,
+          overflowY: 'auto',
+          scrollbarWidth: 'thin',
+          scrollbarColor: isDark
+            ? 'rgba(255, 255, 255, 0.28) transparent'
+            : 'rgba(0, 0, 0, 0.28) transparent',
+          '&::-webkit-scrollbar': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: isDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(0, 0, 0, 0.28)',
+            borderRadius: '9999px',
+          },
+        }}
+      >
         <Box sx={{ textAlign: 'center', mb: 2 }}>
           <Box
             sx={{
