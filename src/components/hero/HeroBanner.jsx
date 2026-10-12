@@ -15,7 +15,8 @@ import {
 import { toggleFavorite } from '../../features/favorites/favoritesSlice';
 import RatingBadge from '../common/RatingBadge';
 import GlassButton from '../common/GlassButton';
-import MirrorBanner from '../common/MirrorBanner';
+import TmdbAttribution from '../common/TmdbAttribution';
+import { tmdbApi } from '../../api/tmdbApi';
 import {
   getImageUrl,
   formatYear,
@@ -57,13 +58,22 @@ export default function HeroBanner({ movies = [] }) {
     ? formatRuntime(currentMovie.runtime)
     : '2h 7m';
 
-  const handlePlay = () => {
-    dispatch(
-      openTrailerModal({
-        trailerKey: currentMovie.trailer_key || 'dQw4w9WgXcQ',
-        title: title,
-      })
-    );
+  const handlePlay = async () => {
+    try {
+      const details = await tmdbApi.getMovieDetails(currentMovie.id);
+      const trailer =
+        details.videos?.results?.find(
+          (v) => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube'
+        ) || details.videos?.results?.[0];
+
+      if (trailer?.key) {
+        dispatch(openTrailerModal({ trailerKey: trailer.key, title }));
+      } else {
+        dispatch(openDetailModal(currentMovie));
+      }
+    } catch {
+      dispatch(openDetailModal(currentMovie));
+    }
   };
 
   const handleDetails = () => {
@@ -319,7 +329,7 @@ export default function HeroBanner({ movies = [] }) {
         ))}
       </Box>
 
-      {/* Bottom Floating Mirror Notification Pill (Matching Image 3) */}
+      {/* Official TMDb Attribution Badge */}
       <Box
         sx={{
           zIndex: 5,
@@ -328,7 +338,7 @@ export default function HeroBanner({ movies = [] }) {
           px: 2,
         }}
       >
-        <MirrorBanner />
+        <TmdbAttribution />
       </Box>
     </Box>
   );

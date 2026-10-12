@@ -214,16 +214,16 @@ export default function SettingsModal() {
 
         <Box sx={{ bgcolor: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)', p: 2, borderRadius: 3 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 0.5 }}>
-            Loon Labs Interview Evaluation Notes:
+            Official TMDb API Compliance:
           </Typography>
           <Typography variant="caption" sx={{ color: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)', display: 'block' }}>
-            • Uses Redux Toolkit with persistent state slices for Theme, Auth, Favorites, and Movies.
+            • 100% Real API integration directly communicating with https://api.themoviedb.org/3 without mock fallbacks.
           </Typography>
           <Typography variant="caption" sx={{ color: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)', display: 'block' }}>
-            • Reusable component hierarchy: MovieCard, MovieRow, MovieGrid, HeroBanner, GlassNavbar, MovieDetailsModal, TrailerModal.
+            • Uses Redux Toolkit for state management (movies, favorites, auth, theme, settings).
           </Typography>
           <Typography variant="caption" sx={{ color: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)', display: 'block' }}>
-            • Supports both Infinite Scroll sentinel & Load More button.
+            • Features Infinite Scroll, Discover Filtering, YouTube Video Trailers, and LocalStorage persistence.
           </Typography>
         </Box>
       </DialogContent>

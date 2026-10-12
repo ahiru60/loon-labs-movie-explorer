@@ -98,8 +98,8 @@ export default function MovieDetailsPage() {
 
   const trailerVideo = movie.videos?.results?.find(
     (v) => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube'
-  ) || movie.videos?.results?.[0];
-  const trailerKey = trailerVideo?.key || movie.trailer_key || 'dQw4w9WgXcQ';
+  ) || movie.videos?.results?.find((v) => v.site === 'YouTube');
+  const trailerKey = trailerVideo?.key || null;
 
   const cast = movie.credits?.cast?.slice(0, 10) || [];
   const similar = movie.similar?.results?.slice(0, 6) || [];
@@ -220,12 +220,18 @@ export default function MovieDetailsPage() {
             <GlassButton
               variant="primary"
               size="large"
-              onClick={() =>
-                dispatch(openTrailerModal({ trailerKey, title }))
-              }
+              disabled={!trailerKey}
+              onClick={() => {
+                if (trailerKey) {
+                  dispatch(openTrailerModal({ trailerKey, title }));
+                }
+              }}
               startIcon={<PlayArrowRoundedIcon sx={{ fontSize: '1.5rem' }} />}
+              sx={{
+                opacity: !trailerKey ? 0.5 : 1,
+              }}
             >
-              Watch Trailer
+              {trailerKey ? 'Watch Trailer' : 'Trailer Unavailable'}
             </GlassButton>
 
             <GlassButton

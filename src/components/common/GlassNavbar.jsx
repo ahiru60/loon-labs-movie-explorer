@@ -376,36 +376,57 @@ export default function GlassNavbar() {
           Notifications
         </Typography>
         <Divider sx={{ mb: 1 }} />
-        {notifications.map((notif) => (
-          <MenuItem
-            key={notif.id}
-            onClick={handleCloseNotifMenu}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              borderRadius: 2,
-              mb: 0.5,
-              whiteSpace: 'normal',
-            }}
-          >
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              {notif.title}
+        {notifications.length === 0 ? (
+          <Box sx={{ px: 2, py: 3, textAlign: 'center' }}>
+            <Typography
+              variant="body2"
+              sx={{ color: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)' }}
+            >
+              No new notifications
             </Typography>
             <Typography
               variant="caption"
-              sx={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)' }}
+              sx={{
+                color: isDark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.45)',
+                display: 'block',
+                mt: 0.5,
+              }}
             >
-              {notif.message}
+              Alerts for your watchlist will appear here.
             </Typography>
-            <Typography
-              variant="caption"
-              sx={{ color: '#818cf8', fontSize: '0.7rem', mt: 0.5 }}
+          </Box>
+        ) : (
+          notifications.map((notif) => (
+            <MenuItem
+              key={notif.id}
+              onClick={handleCloseNotifMenu}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                borderRadius: 2,
+                mb: 0.5,
+                whiteSpace: 'normal',
+              }}
             >
-              {notif.time}
-            </Typography>
-          </MenuItem>
-        ))}
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {notif.title}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)' }}
+              >
+                {notif.message}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ color: '#818cf8', fontSize: '0.7rem', mt: 0.5 }}
+              >
+                {notif.time}
+              </Typography>
+            </MenuItem>
+          ))
+        )}
       </Menu>
 
       {/* User Profile Menu */}

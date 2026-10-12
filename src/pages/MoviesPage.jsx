@@ -3,16 +3,21 @@ import { Box, Typography, Container, CircularProgress } from '@mui/material';
 import MovieFilterRoundedIcon from '@mui/icons-material/MovieFilterRounded';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useSearchParams } from 'react-router-dom';
 import FilterBar from '../components/search/FilterBar';
 import MovieGrid from '../components/movie/MovieGrid';
 import GlassButton from '../components/common/GlassButton';
 import {
   discoverFilteredMovies,
   loadMoreFilteredMovies,
+  setFilters,
 } from '../features/movies/moviesSlice';
 
 export default function MoviesPage() {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const filterParam = searchParams.get('filter');
+
   const {
     filteredMovies,
     filters,
@@ -26,10 +31,20 @@ export default function MoviesPage() {
   const isDark = themeMode === 'dark';
 
   useEffect(() => {
-    if (filteredMovies.length === 0) {
-      dispatch(discoverFilteredMovies(filters));
+    let initialFilters = { ...filters };
+    if (filterParam === 'top_rated') {
+      initialFilters = { ...initialFilters, sortBy: 'vote_average.desc', minRating: 7 };
+      dispatch(setFilters(initialFilters));
+    } else if (filterParam === 'now_playing') {
+      initialFilters = { ...initialFilters, sortBy: 'primary_release_date.desc' };
+      dispatch(setFilters(initialFilters));
+    } else if (filterParam === 'popular') {
+      initialFilters = { ...initialFilters, sortBy: 'popularity.desc' };
+      dispatch(setFilters(initialFilters));
     }
-  }, [dispatch]);
+
+    dispatch(discoverFilteredMovies(initialFilters));
+  }, [dispatch, filterParam]);
 
   const handleLoadMore = () => {
     if (filteredPage < filteredTotalPages && !isLoadingMoreFiltered) {

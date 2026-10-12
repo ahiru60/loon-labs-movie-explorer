@@ -89,22 +89,32 @@ export default function MovieDetailsModal() {
     ? `${current.episode_run_time[0]}m`
     : '1h 45m';
 
-  // Extract trailer key
+  // Extract real trailer key from TMDb videos
   const trailerVideo = current.videos?.results?.find(
     (v) => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube'
-  ) || current.videos?.results?.[0];
-  const trailerKey = trailerVideo?.key || current.trailer_key || 'dQw4w9WgXcQ';
+  ) || current.videos?.results?.find((v) => v.site === 'YouTube');
+  const trailerKey = trailerVideo?.key || null;
+
+  // Extract official certification from TMDb release_dates
+  const usRelease = current.release_dates?.results?.find(
+    (r) => r.iso_3166_1 === 'US'
+  );
+  const certification =
+    usRelease?.release_dates?.find((d) => d.certification?.trim())?.certification ||
+    (current.adult ? '18+' : 'PG-13');
 
   const genres = current.genres || [];
-  const cast = current.credits?.cast?.slice(0, 8) || [];
+  const cast = current.credits?.cast?.slice(0, 10) || [];
 
   const handlePlayTrailer = () => {
-    dispatch(
-      openTrailerModal({
-        trailerKey,
-        title,
-      })
-    );
+    if (trailerKey) {
+      dispatch(
+        openTrailerModal({
+          trailerKey,
+          title,
+        })
+      );
+    }
   };
 
   const handleToggleFavorite = () => {
@@ -380,9 +390,13 @@ export default function MovieDetailsModal() {
               variant="primary"
               size="large"
               onClick={handlePlayTrailer}
+              disabled={!trailerKey}
               startIcon={<PlayArrowRoundedIcon sx={{ fontSize: '1.5rem' }} />}
+              sx={{
+                opacity: !trailerKey ? 0.5 : 1,
+              }}
             >
-              Watch Trailer
+              {trailerKey ? 'Watch Trailer' : 'Trailer Unavailable'}
             </GlassButton>
 
             {/* Add to List Button */}

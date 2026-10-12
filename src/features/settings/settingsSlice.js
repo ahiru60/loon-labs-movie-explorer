@@ -7,22 +7,7 @@ const initialState = {
   customApiKey: loadFromStorage(API_KEY_STORAGE, ''),
   isSettingsOpen: false,
   isNotificationsOpen: false,
-  notifications: [
-    {
-      id: 'n1',
-      title: 'New Trailer Available',
-      message: 'Spider-Man: Brand New Day official teaser is now streaming in 4K.',
-      time: '10m ago',
-      read: false,
-    },
-    {
-      id: 'n2',
-      title: 'Trending Update',
-      message: 'Matchbox: The Movie has reached #1 trending movie this week.',
-      time: '2h ago',
-      read: false,
-    },
-  ],
+  notifications: [],
 };
 
 const settingsSlice = createSlice({
@@ -46,6 +31,16 @@ const settingsSlice = createSlice({
     toggleNotifications: (state) => {
       state.isNotificationsOpen = !state.isNotificationsOpen;
     },
+    addNotification: (state, action) => {
+      state.notifications.unshift({
+        id: 'notif_' + Date.now(),
+        title: action.payload.title,
+        message: action.payload.message,
+        time: 'Just now',
+        read: false,
+      });
+      state.notifications = state.notifications.slice(0, 10);
+    },
     markAllNotificationsRead: (state) => {
       state.notifications.forEach((n) => {
         n.read = true;
@@ -60,6 +55,7 @@ export const {
   openSettingsModal,
   closeSettingsModal,
   toggleNotifications,
+  addNotification,
   markAllNotificationsRead,
 } = settingsSlice.actions;
 

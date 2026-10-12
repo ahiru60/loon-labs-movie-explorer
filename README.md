@@ -1,53 +1,61 @@
 # 🎬 CineGlass — Apple TV Movie Explorer
 
 > **Submission for Loon Labs — Stage 2 Interview Assessment**  
-> *Crafted with React, Redux Toolkit, Material-UI (MUI), React Router, and TMDb API.*  
-> *Engineered following Apple TV Liquid Glassmorphism and Mobile-First Responsive Design Principles.*
+> *Crafted with React, Redux Toolkit, Material-UI (MUI), React Router, and the official TMDb API.*  
+> *Engineered following Apple TV Liquid Glassmorphism and Mobile-First Responsive Design Principles.*  
+> *Strictly integrated with the official TMDb API reference ([developer.themoviedb.org/reference/getting-started](https://developer.themoviedb.org/reference/getting-started)) with zero mock data.*
 
 ---
 
 ## 🌟 Overview & Highlights
 
-**CineGlass** is a modern, high-performance streaming and cinema discovery platform inspired by the Apple TV interface. It delivers cinematic discovery with frosted glass surfaces, real-time TMDb API integration, instant debounce search, responsive carousels, detailed sheet modals, and full local persistence.
+**CineGlass** is a cinema exploration platform inspired by the Apple TV interface. It delivers cinematic discovery with frosted glass surfaces, real-time TMDb API integration, instant debounce search, responsive carousels, detailed sheet modals, and full local persistence.
+
+All movie data, TV series, genres, cast credits, official YouTube trailers, and filter queries are fetched directly from **The Movie Database (TMDb) API v3**.
 
 ---
 
-## 🚀 Key Features Implemented
+## 🚀 Key Features Implemented (100% TMDb API Powered)
 
 ### 1. User Interface (UI) & Apple TV Glass Aesthetic
-- **Floating Glass Capsule Navigation**: Floating capsule header with blur backdrop (`backdrop-filter: blur(28px)`), navigation tabs, search shortcut, notifications counter, settings gear, and profile avatar.
+- **Floating Glass Capsule Navigation**: Floating capsule header with blur backdrop (`backdrop-filter: blur(28px)`), navigation tabs, search shortcut, notifications, settings gear, and profile avatar.
 - **Mobile-First Responsive Dock**: On mobile viewports, the app renders a native iOS-style bottom floating glass dock for comfortable one-handed navigation.
-- **Cinematic Hero Carousel**: Full-bleed backdrop showcasing top trending films with multi-stop dark gradients, release year, runtime, IMDb score badge, synopsis, and action buttons (`▶ Play`, `(i) Details`, `(+) Watchlist`).
+- **Cinematic Hero Carousel**: Full-bleed backdrop showcasing live top trending films from TMDb with multi-stop dark gradients, release year, runtime, IMDb score badge, synopsis, and action buttons (`▶ Play Trailer`, `(i) Details`, `(+) Watchlist`).
 - **Interactive Poster Cards**: Sleek 16px rounded-corner cards with smooth hover elevation (`scale(1.03)` + glow shadow), golden rating badge, and 1-click `(+)` / `(✓)` watchlist toggle.
-- **Apple TV Sheet Modal (Matching Figma)**: Bottom-sheet modal with curved corners, drag handle pill (`—`), high-res backdrop header, category tags, IMDb & Rotten Tomatoes scores, full overview synopsis, and top-billed cast avatar cards.
+- **Apple TV Sheet Modal (Matching Figma)**: Bottom-sheet modal with curved corners, drag handle pill (`—`), high-res backdrop header, category tags, IMDb score, US MPAA certification, full overview synopsis, and top-billed cast avatar cards with headshots fetched directly from TMDb.
 - **Light & Dark Mode**: One-click theme toggle switching between deep Apple dark glass (`#07080c`) and frosted slate light glass (`#f5f7fb`).
+- **Official TMDb Attribution**: Compliant with official TMDb developer terms and branding guidelines.
 
 ### 2. State Management (Redux Toolkit)
 The application manages its entire data flow via **Redux Toolkit** with modular slices:
-- `moviesSlice`: Manages trending movies (day/week), trending series, official TMDb genres, search queries, pagination, movie details, active trailers, and filter parameters.
-- `favoritesSlice`: Manages user Watchlist and "Continue Watching" history with real-time **LocalStorage** synchronization (`cineglass_favorites` and `cineglass_watch_history`).
-- `authSlice`: Handles user credentials, session state, VIP badge, and **LocalStorage** persistence (`cineglass_auth_user`). Includes a **1-Click Demo Login** button for instant evaluation.
+- `moviesSlice`: Manages live trending movies (`/trending/movie/{timeWindow}`), now playing in theaters (`/movie/now_playing`), top-rated classics (`/movie/top_rated`), popular releases (`/movie/popular`), TV series (`/trending/tv/{timeWindow}`), official TMDb genres (`/genre/movie/list`), search queries, pagination, movie details, active trailers, and discover filter parameters.
+- `favoritesSlice`: Manages user Watchlist with real-time **LocalStorage** synchronization (`cineglass_favorites`). No mock preloaded items.
+- `authSlice`: Handles user credentials, session state, VIP status, and **LocalStorage** persistence (`cineglass_auth_user`). Includes a **1-Click Demo Login** button for instant evaluation.
 - `themeSlice`: Persists user's dark/light preference across browser sessions (`cineglass_theme`).
-- `settingsSlice`: Stores custom TMDb API keys and in-app notifications.
+- `settingsSlice`: Stores custom TMDb API keys and in-app preferences.
 
 ### 3. API Integration (The Movie Database - TMDb)
+Referenced from: `https://developer.themoviedb.org/reference/getting-started`
 - **Real-Time TMDb v3 Integration**:
-  - Trending movies: `/trending/movie/{timeWindow}`
-  - Trending series: `/trending/tv/{timeWindow}`
-  - Movie search: `/search/movie` with pagination
-  - Detailed metadata & credits: `/movie/{id}?append_to_response=videos,credits,similar`
-  - Discover & filter: `/discover/movie`
-  - Genres list: `/genre/movie/list`
+  - Trending movies: `GET /3/trending/movie/{time_window}` (day/week)
+  - Trending series: `GET /3/trending/tv/{time_window}` (day/week)
+  - Now playing in theaters: `GET /3/movie/now_playing`
+  - Top rated films: `GET /3/movie/top_rated`
+  - Popular films: `GET /3/movie/popular`
+  - Movie search: `GET /3/search/movie` with pagination
+  - Detailed metadata & credits: `GET /3/movie/{id}?append_to_response=videos,credits,similar,release_dates`
+  - Discover & filter: `GET /3/discover/movie` with `with_genres`, `primary_release_year`, `vote_average.gte`, `vote_count.gte`, and `sort_by`
+  - Genres list: `GET /3/genre/movie/list`
 - **Axios Client**: Configured with request interceptors for automated API key injection, 10s timeout, and unified error handling.
-- **Offline / Rate-Limit Resilience**: The app bundles realistic fallback datasets matching the design mockups (*Matchbox*, *Spider-Man: Brand New Day*, *Other Mommy*, *Animals*, *Stranger Things*, *Lanterns*), guaranteeing zero blank screens even under network failure.
+- **Zero Mock Fallbacks**: All information is fetched live from TMDb. If an error occurs (such as an invalid API key), clear, user-friendly error messages are displayed.
 - **In-App API Key Manager**: Evaluators can open Settings to test or paste their own personal TMDb API key with live verification feedback.
 
 ### 4. Search & Bonus Features
 - **Instant Search with Debounce**: 450ms debounce mechanism preventing wasteful API calls.
 - **Search History Persistence**: The user's last searched movie is automatically stored in `localStorage` and displayed as a clickable chip for 1-tap restore.
 - **Infinite Scrolling & "Load More" Toggle**: Built-in `IntersectionObserver` sentinel for seamless infinite scrolling, with a toggle to switch to a **"Load More"** button mode for alternative UX.
-- **Comprehensive Filtering**: Filter movies by **Genre**, **Release Year** (2018–2026), and **Minimum Rating** (⭐ 8.0+, 7.0+, 6.0+), alongside sorting by popularity, rating, or release date.
-- **YouTube Video Trailer Player**: Integrated 16:9 cinematic YouTube video player modal supporting trailers and teasers fetched directly from TMDb videos.
+- **Comprehensive TMDb Discover Filtering**: Filter movies by **Genre**, **Release Year** (2018–2026), and **Minimum Rating** (⭐ 8.0+, 7.0+, 6.0+), alongside sorting by popularity, rating, or release date.
+- **YouTube Video Trailer Player**: Integrated 16:9 cinematic YouTube video player modal playing trailers and teasers fetched directly from TMDb videos endpoint.
 
 ---
 
@@ -72,15 +80,14 @@ loon-labs/
 ├── src/
 │   ├── api/
 │   │   ├── axiosClient.js        # Configured Axios instance with interceptors
-│   │   ├── tmdbApi.js            # TMDb API endpoints & methods
-│   │   └── mockData.js           # Resilient realistic fallback dataset
+│   │   └── tmdbApi.js            # Pure TMDb API v3 service endpoints
 │   ├── app/
 │   │   └── store.js              # Redux store configuration
 │   ├── features/
 │   │   ├── auth/                 # Authentication state & actions
-│   │   ├── favorites/            # Watchlist & Continue Watching with localStorage
+│   │   ├── favorites/            # Watchlist with localStorage sync
 │   │   ├── movies/               # Trending, Search, Filters, Details, Trailers
-│   │   ├── settings/             # Custom API key & notification preferences
+│   │   ├── settings/             # Custom API key & user preferences
 │   │   └── theme/                # Dark/Light theme mode state
 │   ├── components/
 │   │   ├── common/
@@ -88,7 +95,7 @@ loon-labs/
 │   │   │   ├── MobileBottomNav.jsx # Mobile floating glass dock
 │   │   │   ├── GlassButton.jsx   # Apple TV pill & circular glass buttons
 │   │   │   ├── RatingBadge.jsx   # Golden star rating badge
-│   │   │   ├── MirrorBanner.jsx  # Floating mirror announcement pill
+│   │   │   ├── TmdbAttribution.jsx # Official TMDb developer attribution badge
 │   │   │   └── LoadingSkeleton.jsx # Glass shimmer skeletons
 │   │   ├── movie/
 │   │   │   ├── MovieCard.jsx     # Reusable poster card with 1-click favorite
@@ -102,11 +109,11 @@ loon-labs/
 │   │   │   ├── SearchBar.jsx     # Debounced input with last search chip
 │   │   │   └── FilterBar.jsx     # Genre, year, rating, and sort controls
 │   │   ├── auth/
-│   │   │   └── LoginModal.jsx    # Glassmorphism login dialog with demo login
+│   │   └── LoginModal.jsx      # Glassmorphism login dialog with demo login
 │   │   └── settings/
 │   │       └── SettingsModal.jsx # API key tester & configuration modal
 │   ├── pages/
-│   │   ├── HomePage.jsx          # Hero + Continue Watching + Trending Rows
+│   │   ├── HomePage.jsx          # Hero + Trending + Now Playing + Top Rated
 │   │   ├── MoviesPage.jsx        # Explore movies with full filter bar & grid
 │   │   ├── SeriesPage.jsx        # TV series collection
 │   │   ├── SearchPage.jsx        # Search with infinite scroll / load more
@@ -194,7 +201,7 @@ The production bundle will be output to the `dist/` folder.
    - Navigate to **"List"** in the top navigation to see your saved movies persist across reloads.
 5. **Test Apple TV Sheet Modal & YouTube Trailer**:
    - Click any movie poster to open the Apple TV sheet modal matching the design mockups.
-   - Click **"Watch Trailer"** to play the embedded YouTube trailer.
+   - Click **"Watch Trailer"** to play the real YouTube trailer retrieved from TMDb.
 6. **Test Light / Dark Mode**:
    - Click the sun/moon icon in the top floating capsule to toggle between dark glass and light frosted glass.
 7. **Test Custom API Key**:

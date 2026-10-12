@@ -12,7 +12,7 @@ export const fetchTrendingMovies = createAsyncThunk(
       const results = await tmdbApi.getTrendingMovies(timeWindow);
       return results;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to fetch trending movies');
+      return rejectWithValue(err.message || 'Failed to fetch trending movies from TMDb');
     }
   }
 );
@@ -24,7 +24,43 @@ export const fetchTrendingSeries = createAsyncThunk(
       const results = await tmdbApi.getTrendingSeries(timeWindow);
       return results;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to fetch trending series');
+      return rejectWithValue(err.message || 'Failed to fetch trending series from TMDb');
+    }
+  }
+);
+
+export const fetchNowPlayingMovies = createAsyncThunk(
+  'movies/fetchNowPlayingMovies',
+  async (page = 1, { rejectWithValue }) => {
+    try {
+      const results = await tmdbApi.getNowPlayingMovies(page);
+      return results;
+    } catch (err) {
+      return rejectWithValue(err.message || 'Failed to fetch now playing movies from TMDb');
+    }
+  }
+);
+
+export const fetchTopRatedMovies = createAsyncThunk(
+  'movies/fetchTopRatedMovies',
+  async (page = 1, { rejectWithValue }) => {
+    try {
+      const results = await tmdbApi.getTopRatedMovies(page);
+      return results;
+    } catch (err) {
+      return rejectWithValue(err.message || 'Failed to fetch top-rated movies from TMDb');
+    }
+  }
+);
+
+export const fetchPopularMovies = createAsyncThunk(
+  'movies/fetchPopularMovies',
+  async (page = 1, { rejectWithValue }) => {
+    try {
+      const results = await tmdbApi.getPopularMovies(page);
+      return results;
+    } catch (err) {
+      return rejectWithValue(err.message || 'Failed to fetch popular movies from TMDb');
     }
   }
 );
@@ -36,7 +72,7 @@ export const fetchGenres = createAsyncThunk(
       const results = await tmdbApi.getGenres();
       return results;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to fetch genres');
+      return rejectWithValue(err.message || 'Failed to fetch genres from TMDb');
     }
   }
 );
@@ -48,7 +84,7 @@ export const searchMovies = createAsyncThunk(
       const data = await tmdbApi.searchMovies(query, page);
       return { ...data, query };
     } catch (err) {
-      return rejectWithValue(err.message || 'Search failed');
+      return rejectWithValue(err.message || 'TMDb search failed');
     }
   }
 );
@@ -60,7 +96,7 @@ export const loadMoreSearchResults = createAsyncThunk(
       const data = await tmdbApi.searchMovies(query, page);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to load more results');
+      return rejectWithValue(err.message || 'Failed to load more results from TMDb');
     }
   }
 );
@@ -72,7 +108,7 @@ export const fetchMovieDetails = createAsyncThunk(
       const details = await tmdbApi.getMovieDetails(movieId);
       return details;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to fetch movie details');
+      return rejectWithValue(err.message || 'Failed to fetch movie details from TMDb');
     }
   }
 );
@@ -84,7 +120,7 @@ export const discoverFilteredMovies = createAsyncThunk(
       const data = await tmdbApi.discoverMovies(filters);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to discover movies');
+      return rejectWithValue(err.message || 'Failed to discover movies from TMDb');
     }
   }
 );
@@ -96,7 +132,7 @@ export const loadMoreFilteredMovies = createAsyncThunk(
       const data = await tmdbApi.discoverMovies(filters);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message || 'Failed to load more filtered movies');
+      return rejectWithValue(err.message || 'Failed to load more filtered movies from TMDb');
     }
   }
 );
@@ -104,11 +140,14 @@ export const loadMoreFilteredMovies = createAsyncThunk(
 const initialState = {
   trendingMovies: [],
   trendingSeries: [],
+  nowPlayingMovies: [],
+  topRatedMovies: [],
+  popularMovies: [],
   genres: [],
   
   // Search
   searchQuery: '',
-  lastSearchQuery: loadFromStorage(LAST_SEARCH_KEY, 'Spider-Man'),
+  lastSearchQuery: loadFromStorage(LAST_SEARCH_KEY, ''),
   searchResults: [],
   searchPage: 1,
   searchTotalPages: 1,
@@ -117,7 +156,7 @@ const initialState = {
   isLoadingMoreSearch: false,
   searchError: null,
 
-  // Filters (Bonus requirement)
+  // Filters (TMDb Discover API)
   filters: {
     genreId: '',
     year: '',
@@ -213,12 +252,27 @@ const moviesSlice = createSlice({
       })
       .addCase(fetchTrendingMovies.rejected, (state, action) => {
         state.isLoadingTrending = false;
-        state.trendingError = action.payload || 'Failed to load trending movies';
+        state.trendingError = action.payload;
       });
 
     // Trending Series
     builder.addCase(fetchTrendingSeries.fulfilled, (state, action) => {
       state.trendingSeries = action.payload;
+    });
+
+    // Now Playing Movies
+    builder.addCase(fetchNowPlayingMovies.fulfilled, (state, action) => {
+      state.nowPlayingMovies = action.payload;
+    });
+
+    // Top Rated Movies
+    builder.addCase(fetchTopRatedMovies.fulfilled, (state, action) => {
+      state.topRatedMovies = action.payload;
+    });
+
+    // Popular Movies
+    builder.addCase(fetchPopularMovies.fulfilled, (state, action) => {
+      state.popularMovies = action.payload;
     });
 
     // Genres
@@ -248,14 +302,13 @@ const moviesSlice = createSlice({
         state.searchError = action.payload;
       });
 
-    // Load More Search Results (Infinite Scroll & Load More)
+    // Load More Search Results
     builder
       .addCase(loadMoreSearchResults.pending, (state) => {
         state.isLoadingMoreSearch = true;
       })
       .addCase(loadMoreSearchResults.fulfilled, (state, action) => {
         state.isLoadingMoreSearch = false;
-        // Prevent duplicate IDs when appending
         const existingIds = new Set(state.searchResults.map((m) => m.id));
         const newItems = action.payload.results.filter((m) => !existingIds.has(m.id));
         state.searchResults = [...state.searchResults, ...newItems];
