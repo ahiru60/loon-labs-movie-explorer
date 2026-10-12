@@ -93,8 +93,13 @@ export default function MovieDetailsPage() {
     movie.backdrop_path?.startsWith('http')
       ? movie.backdrop_path
       : getImageUrl(movie.backdrop_path, 'original');
-  const releaseYear = formatYear(movie.release_date || movie.first_air_date);
-  const runtimeStr = movie.runtime ? formatRuntime(movie.runtime) : '1h 55m';
+  const runtimeStr = movie.runtime
+    ? formatRuntime(movie.runtime)
+    : movie.episode_run_time?.[0]
+    ? `${movie.episode_run_time[0]}m`
+    : movie.number_of_seasons
+    ? `${movie.number_of_seasons} Season${movie.number_of_seasons > 1 ? 's' : ''}`
+    : 'Series';
 
   const trailerVideo = movie.videos?.results?.find(
     (v) => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube'

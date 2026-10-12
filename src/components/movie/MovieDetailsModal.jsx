@@ -50,8 +50,11 @@ export default function MovieDetailsModal() {
       let isMounted = true;
       setLoading(true);
 
+      const mediaType =
+        selectedMovie.media_type || (selectedMovie.name ? 'tv' : 'movie');
+
       tmdbApi
-        .getMovieDetails(selectedMovie.id)
+        .getMovieDetails(selectedMovie.id, mediaType)
         .then((data) => {
           if (isMounted) {
             setMovieDetails(data);
@@ -87,7 +90,9 @@ export default function MovieDetailsModal() {
     ? formatRuntime(current.runtime)
     : current.episode_run_time?.[0]
     ? `${current.episode_run_time[0]}m`
-    : '1h 45m';
+    : current.number_of_seasons
+    ? `${current.number_of_seasons} Season${current.number_of_seasons > 1 ? 's' : ''}`
+    : 'Series';
 
   // Extract real trailer key from TMDb videos
   const trailerVideo = current.videos?.results?.find(
@@ -95,13 +100,18 @@ export default function MovieDetailsModal() {
   ) || current.videos?.results?.find((v) => v.site === 'YouTube');
   const trailerKey = trailerVideo?.key || null;
 
-  // Extract official certification from TMDb release_dates
-  const usRelease = current.release_dates?.results?.find(
+  // Extract official certification from TMDb release_dates or TV content_ratings
+  const usMovieRelease = current.release_dates?.results?.find(
+    (r) => r.iso_3166_1 === 'US'
+  );
+  const usTvRating = current.content_ratings?.results?.find(
     (r) => r.iso_3166_1 === 'US'
   );
   const certification =
-    usRelease?.release_dates?.find((d) => d.certification?.trim())?.certification ||
-    (current.adult ? '18+' : 'PG-13');
+    usMovieRelease?.release_dates?.find((d) => d.certification?.trim())?.certification ||
+    usTvRating?.rating ||
+    current.certification ||
+    (current.adult ? '18+' : 'TV-14');
 
   const genres = current.genres || [];
   const cast = current.credits?.cast?.slice(0, 10) || [];

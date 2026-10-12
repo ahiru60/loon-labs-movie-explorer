@@ -80,16 +80,43 @@ export const tmdbApi = {
   },
 
   /**
-   * Get primary movie details with appended credits, videos, similar, and release dates
-   * Endpoint: GET /3/movie/{movie_id}
+   * Get details for movies or TV series with appended credits, videos, and ratings
+   * Endpoint: GET /3/movie/{id} or GET /3/tv/{id}
    */
-  getMovieDetails: async (movieId) => {
-    const data = await axiosClient.get(`/movie/${movieId}`, {
-      params: {
-        append_to_response: 'videos,credits,similar,release_dates',
-      },
-    });
-    return data;
+  getMovieDetails: async (id, mediaType = 'movie') => {
+    // If explicitly marked as TV show
+    if (mediaType === 'tv') {
+      const data = await axiosClient.get(`/tv/${id}`, {
+        params: {
+          append_to_response: 'videos,credits,similar,content_ratings',
+        },
+      });
+      return { ...data, media_type: 'tv' };
+    }
+
+    try {
+      const data = await axiosClient.get(`/movie/${id}`, {
+        params: {
+          append_to_response: 'videos,credits,similar,release_dates',
+        },
+      });
+      return { ...data, media_type: 'movie' };
+    } catch (err) {
+      // If /movie/ returns 404, automatically check if it is a TV series!
+      if (err.status === 404) {
+        try {
+          const tvData = await axiosClient.get(`/tv/${id}`, {
+            params: {
+              append_to_response: 'videos,credits,similar,content_ratings',
+            },
+          });
+          return { ...tvData, media_type: 'tv' };
+        } catch {
+          throw err;
+        }
+      }
+      throw err;
+    }
   },
 
   /**
