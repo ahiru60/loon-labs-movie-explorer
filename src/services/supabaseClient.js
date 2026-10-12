@@ -1,44 +1,39 @@
 import { createClient } from '@supabase/supabase-js';
-import { loadFromStorage, saveToStorage } from '../utils/localStorage';
 import { sanitizeText, isValidId } from '../utils/validation';
 
-export const SUPABASE_URL_KEY = 'cineglass_supabase_url';
-export const SUPABASE_ANON_KEY_KEY = 'cineglass_supabase_anon_key';
+// Security cleanup: purge any legacy credentials from client-side localStorage
+try {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    window.localStorage.removeItem('cineglass_supabase_url');
+    window.localStorage.removeItem('cineglass_supabase_anon_key');
+    window.localStorage.removeItem('cineglass_custom_tmdb_key');
+  }
+} catch {
+  // Silent fallback
+}
 
-// Read from env or local storage
-const getInitialUrl = () => {
-  return (
-    import.meta.env.VITE_SUPABASE_URL ||
-    loadFromStorage(SUPABASE_URL_KEY, '') ||
-    ''
-  );
-};
+// Read strictly from environment variables (NEVER EXPOSE VIA UI OR PERSIST IN LOCALSTORAGE)
+const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
-const getInitialKey = () => {
-  return (
-    import.meta.env.VITE_SUPABASE_ANON_KEY ||
-    loadFromStorage(SUPABASE_ANON_KEY_KEY, '') ||
-    ''
-  );
-};
-
-let currentUrl = getInitialUrl();
-let currentKey = getInitialKey();
 let supabaseInstance = null;
 
-// Initialize Supabase client if valid credentials exist
-export const initSupabaseClient = (url = currentUrl, key = currentKey) => {
-  if (url && key && typeof url === 'string' && url.startsWith('http') && key.length > 10) {
+// Initialize Supabase client if valid credentials exist in environment
+export const initSupabaseClient = () => {
+  if (
+    SUPABASE_URL &&
+    SUPABASE_ANON_KEY &&
+    SUPABASE_URL.startsWith('http') &&
+    SUPABASE_ANON_KEY.length > 10
+  ) {
     try {
-      supabaseInstance = createClient(url, key, {
+      supabaseInstance = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
           persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
         },
       });
-      currentUrl = url;
-      currentKey = key;
       return supabaseInstance;
     } catch (err) {
       console.warn('Failed to initialize Supabase client:', err);
@@ -54,8 +49,8 @@ export const initSupabaseClient = (url = currentUrl, key = currentKey) => {
 initSupabaseClient();
 
 export const getSupabase = () => {
-  if (!supabaseInstance && currentUrl && currentKey) {
-    return initSupabaseClient(currentUrl, currentKey);
+  if (!supabaseInstance && SUPABASE_URL && SUPABASE_ANON_KEY) {
+    return initSupabaseClient();
   }
   return supabaseInstance;
 };
@@ -63,40 +58,11 @@ export const getSupabase = () => {
 export const isSupabaseConfigured = () => {
   return Boolean(
     supabaseInstance ||
-      (currentUrl && currentUrl.startsWith('http') && currentKey && currentKey.length > 10)
+      (SUPABASE_URL &&
+        SUPABASE_URL.startsWith('http') &&
+        SUPABASE_ANON_KEY &&
+        SUPABASE_ANON_KEY.length > 10)
   );
-};
-
-export const getSupabaseConfig = () => ({
-  url: currentUrl,
-  anonKey: currentKey,
-  isConfigured: isSupabaseConfigured(),
-});
-
-export const saveSupabaseConfig = (url, anonKey) => {
-  currentUrl = (url || '').trim();
-  currentKey = (anonKey || '').trim();
-  saveToStorage(SUPABASE_URL_KEY, currentUrl);
-  saveToStorage(SUPABASE_ANON_KEY_KEY, currentKey);
-  return initSupabaseClient(currentUrl, currentKey);
-};
-
-// Test connection
-export const testSupabaseConnection = async (testUrl = currentUrl, testKey = currentKey) => {
-  if (!testUrl || !testKey) {
-    return { success: false, error: 'URL and Anon Key are required.' };
-  }
-  try {
-    const client = createClient(testUrl, testKey);
-    // Simple ping check via getSession or table count
-    const { error } = await client.auth.getSession();
-    if (error) {
-      return { success: false, error: error.message };
-    }
-    return { success: true };
-  } catch (err) {
-    return { success: false, error: err.message || 'Connection failed' };
-  }
 };
 
 /* ==========================================================================

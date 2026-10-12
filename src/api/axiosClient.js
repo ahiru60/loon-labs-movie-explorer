@@ -1,19 +1,13 @@
 import axios from 'axios';
-import { loadFromStorage } from '../utils/localStorage';
 
-// Read exclusively from environment variable or custom user settings (NEVER HARDCODE)
+// Read strictly from environment variable (NEVER HARDCODE OR EXPOSE TO UI)
 const ENV_API_KEY = (import.meta.env.VITE_TMDB_API_KEY || '').trim();
 const BASE_URL = (import.meta.env.VITE_TMDB_BASE_URL || 'https://api.themoviedb.org/3').trim();
 
 /**
- * Resolves active TMDb API Key from runtime settings or environment.
- * Prioritizes user-specified custom key, then environment variable.
+ * Resolves active TMDb API Key strictly from environment variable.
  */
 export const getActiveApiKey = () => {
-  const customKey = loadFromStorage('cineglass_custom_tmdb_key', null);
-  if (customKey && typeof customKey === 'string' && customKey.trim().length > 10) {
-    return customKey.trim();
-  }
   return ENV_API_KEY;
 };
 
@@ -30,7 +24,7 @@ axiosClient.interceptors.request.use(
   (config) => {
     const key = getActiveApiKey();
     if (!key) {
-      return Promise.reject(new Error('Missing TMDb API Key. Please configure VITE_TMDB_API_KEY in your .env file or Settings modal.'));
+      return Promise.reject(new Error('Missing TMDb API Key. Please configure VITE_TMDB_API_KEY in your .env file.'));
     }
     config.params = {
       ...config.params,

@@ -16,7 +16,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
@@ -27,7 +26,6 @@ import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import { toggleTheme } from '../../features/theme/themeSlice';
 import { openLoginModal, logout } from '../../features/auth/authSlice';
 import {
-  openSettingsModal,
   toggleNotifications,
   markAllNotificationsRead,
 } from '../../features/settings/settingsSlice';
@@ -254,21 +252,6 @@ export default function GlassNavbar() {
               >
                 <NotificationsRoundedIcon fontSize="small" />
               </Badge>
-            </IconButton>
-          </Tooltip>
-
-          {/* Settings Icon */}
-          <Tooltip title="Settings & TMDb API Key">
-            <IconButton
-              size="small"
-              onClick={() => dispatch(openSettingsModal())}
-              sx={{
-                color: isDark ? 'rgba(255,255,255,0.85)' : '#0f172a',
-                transition: 'all 0.2s',
-                '&:hover': { transform: 'rotate(45deg) scale(1.15)', color: '#6366f1' },
-              }}
-            >
-              <SettingsRoundedIcon fontSize="small" />
             </IconButton>
           </Tooltip>
 

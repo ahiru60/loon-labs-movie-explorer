@@ -28,7 +28,6 @@ import {
   closeLoginModal,
   clearAuthMessages,
 } from '../../features/auth/authSlice';
-import { openSettingsModal } from '../../features/settings/settingsSlice';
 import GlassButton from '../common/GlassButton';
 import { validateEmail, validatePassword, sanitizeText } from '../../utils/validation';
 

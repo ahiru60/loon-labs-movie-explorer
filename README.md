@@ -57,7 +57,7 @@ Referenced from: `https://developer.themoviedb.org/reference/getting-started`
   - Genres list: `GET /3/genre/movie/list`
 - **Axios Client**: Configured with request interceptors for automated API key injection, 10s timeout, and unified error handling.
 - **Real-Time TMDb Endpoints**: All catalog data, trailers, and cast credits are queried live from TMDb. If an error occurs (such as an invalid API key or network interruption), standard resilient error boundaries and informative alerts are presented.
-- **In-App API Key Manager**: Evaluators can open Settings to test or paste their own personal TMDb API key with live verification feedback.
+- **Secure Environment Management**: API keys and database credentials strictly managed via `.env` configuration, safeguarding infrastructure against unauthorized client inspection.
 
 ### 5. Search & Bonus Features
 - **Instant Search with Debounce**: 450ms debounce mechanism preventing wasteful API calls.
@@ -101,7 +101,7 @@ loon-labs/
 │   │   ├── auth/                 # Supabase authentication state & thunks
 │   │   ├── favorites/            # Watchlist with Supabase cloud DB sync & local storage
 │   │   ├── movies/               # Trending, Search, Filters, Details, Trailers
-│   │   ├── settings/             # Custom API key, Supabase config & user preferences
+│   │   ├── settings/             # Notifications and app preferences slice
 │   │   └── theme/                # Dark/Light theme mode state
 │   ├── components/
 │   │   ├── common/
@@ -122,10 +122,8 @@ loon-labs/
 │   │   ├── search/
 │   │   │   ├── SearchBar.jsx     # Debounced input with last search chip
 │   │   │   └── FilterBar.jsx     # Genre, year, rating, and sort controls
-│   │   ├── auth/
-│   │   │   └── LoginModal.jsx    # Supabase Auth dialog (Sign in & Sign up)
-│   │   └── settings/
-│   │       └── SettingsModal.jsx # TMDb & Supabase tester & configuration modal
+│   │   └── auth/
+│   │       └── LoginModal.jsx    # Supabase Auth dialog (Sign in & Sign up)
 │   ├── pages/
 │   │   ├── HomePage.jsx          # Hero + Trending + Now Playing + Top Rated
 │   │   ├── MoviesPage.jsx        # Explore movies with full filter bar & grid

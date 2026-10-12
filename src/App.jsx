@@ -11,7 +11,6 @@ import MobileBottomNav from './components/common/MobileBottomNav';
 import MovieDetailsModal from './components/movie/MovieDetailsModal';
 import TrailerModal from './components/movie/TrailerModal';
 import LoginModal from './components/auth/LoginModal';
-import SettingsModal from './components/settings/SettingsModal';
 
 import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
@@ -76,7 +75,6 @@ export default function App() {
         <MovieDetailsModal />
         <TrailerModal />
         <LoginModal />
-        <SettingsModal />
       </Box>
     </ThemeProvider>
   );
