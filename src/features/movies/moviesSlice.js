@@ -170,7 +170,7 @@ const initialState = {
   isLoadingMoreFiltered: false,
   filteredError: null,
 
-  // Selected Movie / Apple TV Detail Modal
+  // Selected Movie / Interactive Details Sheet
   selectedMovie: null,
   isLoadingDetails: false,
   detailsError: null,

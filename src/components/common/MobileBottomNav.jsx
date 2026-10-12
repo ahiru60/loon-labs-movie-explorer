@@ -49,7 +49,7 @@ export default function MobileBottomNav() {
       }}
     >
       <Box
-        className={isDark ? 'apple-glass-pill' : 'apple-glass-light'}
+        className={isDark ? 'glass-pill' : 'glass-light'}
         sx={{
           pointerEvents: 'auto',
           width: '100%',

@@ -66,7 +66,7 @@ export default function SearchBar({ onSearchSubmit, autoFocus = false }) {
       <Box
         component="form"
         onSubmit={handleSubmit}
-        className={isDark ? 'apple-glass-pill' : 'apple-glass-light'}
+        className={isDark ? 'glass-pill' : 'glass-light'}
         sx={{
           display: 'flex',
           alignItems: 'center',

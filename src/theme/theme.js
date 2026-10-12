@@ -7,7 +7,7 @@ export const getAppTheme = (mode = 'dark') => {
     palette: {
       mode,
       primary: {
-        main: '#6366f1', // Indigo / Apple accent
+        main: '#6366f1', // Vibrant Indigo accent
         light: '#818cf8',
         dark: '#4f46e5',
         contrastText: '#ffffff',
@@ -96,7 +96,7 @@ export const getAppTheme = (mode = 'dark') => {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 9999, // Pill shape like Apple TV
+            borderRadius: 9999, // Fluid pill geometry
             padding: '10px 22px',
             fontSize: '0.92rem',
             backdropFilter: 'blur(16px)',

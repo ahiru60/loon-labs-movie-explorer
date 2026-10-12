@@ -33,7 +33,7 @@ export default function MovieCard({ movie, priority = false }) {
   return (
     <Box
       onClick={handleCardClick}
-      className="apple-card-hover"
+      className="glass-card-hover"
       sx={{
         position: 'relative',
         width: '100%',

@@ -78,7 +78,7 @@ export default function LoginPage() {
       }}
     >
       <Box
-        className={isDark ? 'apple-glass-pill' : 'apple-glass-light'}
+        className={isDark ? 'glass-pill' : 'glass-light'}
         sx={{
           width: '100%',
           maxWidth: 440,

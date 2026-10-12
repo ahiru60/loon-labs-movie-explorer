@@ -85,7 +85,7 @@ export default function GlassNavbar() {
       }}
     >
       <Box
-        className={isDark ? 'apple-glass-pill' : 'apple-glass-light'}
+        className={isDark ? 'glass-pill' : 'glass-light'}
         sx={{
           pointerEvents: 'auto',
           display: 'flex',

@@ -165,7 +165,7 @@ export default function MovieDetailsModal() {
         },
       }}
     >
-      {/* Top Grab Handle (Apple TV sheet handle matching Image 5) */}
+      {/* Top Grab Handle indicator */}
       <Box
         sx={{
           display: 'flex',
@@ -239,7 +239,7 @@ export default function MovieDetailsModal() {
             }}
           />
 
-          {/* Apple TV Cinematic Multi-Stop Gradient Overlay */}
+          {/* Cinematic Multi-Stop Gradient Overlay */}
           <Box
             sx={{
               position: 'absolute',

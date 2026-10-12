@@ -1,9 +1,9 @@
-# 🎬 CineGlass — Apple TV Movie Explorer
+# 🎬 CineGlass — Modern Cinema Explorer
 
 > **Submission for Loon Labs — Stage 2 Interview Assessment**  
 > *Crafted with React, Redux Toolkit, Material-UI (MUI), React Router, and the official TMDb API.*  
-> *Engineered following Apple TV Liquid Glassmorphism and Mobile-First Responsive Design Principles.*  
-> *Strictly integrated with the official TMDb API reference ([developer.themoviedb.org/reference/getting-started](https://developer.themoviedb.org/reference/getting-started)) with zero mock data.*  
+> *Engineered following Modern Glassmorphism Architecture and Mobile-First Responsive Design Principles.*  
+> *Strictly integrated with the official TMDb API reference ([developer.themoviedb.org/reference/getting-started](https://developer.themoviedb.org/reference/getting-started)) with live production endpoints.*  
 > 
 > 🔗 **Repository**: [https://github.com/ahiru60/loon-labs-movie-explorer](https://github.com/ahiru60/loon-labs-movie-explorer)
 
@@ -11,27 +11,27 @@
 
 ## 🌟 Overview & Highlights
 
-**CineGlass** is a cinema exploration platform inspired by the Apple TV interface. It delivers cinematic discovery with frosted glass surfaces, real-time TMDb API integration, instant debounce search, responsive carousels, detailed sheet modals, and full local persistence.
+**CineGlass** is a premium cinema exploration platform designed with modern glassmorphism. It delivers cinematic discovery with frosted translucent surfaces, real-time TMDb API integration, instant debounce search, responsive carousels, interactive details sheets, and full local persistence.
 
 All movie data, TV series, genres, cast credits, official YouTube trailers, and filter queries are fetched directly from **The Movie Database (TMDb) API v3**.
 
 ---
 
-## 🚀 Key Features Implemented (100% TMDb API Powered)
+## 🚀 Key Features Implemented (Direct TMDb API Integration)
 
-### 1. User Interface (UI) & Apple TV Glass Aesthetic
+### 1. User Interface (UI) & Modern Glassmorphic Design
 - **Floating Glass Capsule Navigation**: Floating capsule header with blur backdrop (`backdrop-filter: blur(28px)`), navigation tabs, search shortcut, notifications, settings gear, and profile avatar.
-- **Mobile-First Responsive Dock**: On mobile viewports, the app renders a native iOS-style bottom floating glass dock for comfortable one-handed navigation.
+- **Mobile-First Responsive Dock**: On mobile viewports, the app renders a floating bottom glass dock for ergonomic one-handed navigation.
 - **Cinematic Hero Carousel**: Full-bleed backdrop showcasing live top trending films from TMDb with multi-stop dark gradients, release year, runtime, IMDb score badge, synopsis, and action buttons (`▶ Play Trailer`, `(i) Details`, `(+) Watchlist`).
 - **Interactive Poster Cards**: Sleek 16px rounded-corner cards with smooth hover elevation (`scale(1.03)` + glow shadow), golden rating badge, and 1-click `(+)` / `(✓)` watchlist toggle.
-- **Apple TV Sheet Modal (Matching Figma)**: Bottom-sheet modal with curved corners, drag handle pill (`—`), high-res backdrop header, category tags, IMDb score, US MPAA certification, full overview synopsis, and top-billed cast avatar cards with headshots fetched directly from TMDb.
-- **Light & Dark Mode**: One-click theme toggle switching between deep Apple dark glass (`#07080c`) and frosted slate light glass (`#f5f7fb`).
+- **Interactive Details Sheet (Matching Figma)**: Interactive bottom sheet with curved corners, drag handle indicator, high-res backdrop header, category tags, IMDb score, certification, full synopsis, and top-billed cast avatar cards with headshots fetched directly from TMDb.
+- **Light & Dark Mode**: One-click theme toggle switching between deep midnight dark glass (`#07080c`) and frosted slate light glass (`#f5f7fb`).
 - **Official TMDb Attribution**: Compliant with official TMDb developer terms and branding guidelines.
 
 ### 2. State Management (Redux Toolkit)
 The application manages its entire data flow via **Redux Toolkit** with modular slices:
 - `moviesSlice`: Manages live trending movies (`/trending/movie/{timeWindow}`), now playing in theaters (`/movie/now_playing`), top-rated classics (`/movie/top_rated`), popular releases (`/movie/popular`), TV series (`/trending/tv/{timeWindow}`), official TMDb genres (`/genre/movie/list`), search queries, pagination, movie details, active trailers, and discover filter parameters.
-- `favoritesSlice`: Manages user Watchlist with real-time **LocalStorage** synchronization (`cineglass_favorites`). No mock preloaded items.
+- `favoritesSlice`: Manages user Watchlist with real-time **LocalStorage** synchronization (`cineglass_favorites`).
 - `authSlice`: Handles user credentials, session state, VIP status, and **LocalStorage** persistence (`cineglass_auth_user`). Includes a **1-Click Demo Login** button for instant evaluation.
 - `themeSlice`: Persists user's dark/light preference across browser sessions (`cineglass_theme`).
 - `settingsSlice`: Stores custom TMDb API keys and in-app preferences.
@@ -49,7 +49,7 @@ Referenced from: `https://developer.themoviedb.org/reference/getting-started`
   - Discover & filter: `GET /3/discover/movie` with `with_genres`, `primary_release_year`, `vote_average.gte`, `vote_count.gte`, and `sort_by`
   - Genres list: `GET /3/genre/movie/list`
 - **Axios Client**: Configured with request interceptors for automated API key injection, 10s timeout, and unified error handling.
-- **Zero Mock Fallbacks**: All information is fetched live from TMDb. If an error occurs (such as an invalid API key), clear, user-friendly error messages are displayed.
+- **Real-Time TMDb Endpoints**: All catalog data, trailers, and cast credits are queried live from TMDb. If an error occurs (such as an invalid API key or network interruption), standard resilient error boundaries and informative alerts are presented.
 - **In-App API Key Manager**: Evaluators can open Settings to test or paste their own personal TMDb API key with live verification feedback.
 
 ### 4. Search & Bonus Features
@@ -93,9 +93,9 @@ loon-labs/
 │   │   └── theme/                # Dark/Light theme mode state
 │   ├── components/
 │   │   ├── common/
-│   │   │   ├── GlassNavbar.jsx   # Top floating Apple TV pill navigation
+│   │   │   ├── GlassNavbar.jsx   # Top floating capsule navigation
 │   │   │   ├── MobileBottomNav.jsx # Mobile floating glass dock
-│   │   │   ├── GlassButton.jsx   # Apple TV pill & circular glass buttons
+│   │   │   ├── GlassButton.jsx   # Pill & circular glass action buttons
 │   │   │   ├── RatingBadge.jsx   # Golden star rating badge
 │   │   │   ├── TmdbAttribution.jsx # Official TMDb developer attribution badge
 │   │   │   └── LoadingSkeleton.jsx # Glass shimmer skeletons
@@ -103,7 +103,7 @@ loon-labs/
 │   │   │   ├── MovieCard.jsx     # Reusable poster card with 1-click favorite
 │   │   │   ├── MovieRow.jsx      # Horizontal carousel with chevron navigation
 │   │   │   ├── MovieGrid.jsx     # Mobile-first responsive poster grid
-│   │   │   ├── MovieDetailsModal.jsx # Apple TV sheet modal matching Figma
+│   │   │   ├── MovieDetailsModal.jsx # Interactive details sheet matching Figma
 │   │   │   └── TrailerModal.jsx  # 16:9 YouTube video embed dialog
 │   │   ├── hero/
 │   │   │   └── HeroBanner.jsx    # Cinematic full-bleed backdrop hero
@@ -201,8 +201,8 @@ The production bundle will be output to the `dist/` folder.
 4. **Test Watchlist & Local Storage**:
    - Click the `(+)` button on any poster.
    - Navigate to **"List"** in the top navigation to see your saved movies persist across reloads.
-5. **Test Apple TV Sheet Modal & YouTube Trailer**:
-   - Click any movie poster to open the Apple TV sheet modal matching the design mockups.
+5. **Test Interactive Details Sheet & YouTube Trailer**:
+   - Click any movie poster to open the interactive details sheet matching the Figma design specifications.
    - Click **"Watch Trailer"** to play the real YouTube trailer retrieved from TMDb.
 6. **Test Light / Dark Mode**:
    - Click the sun/moon icon in the top floating capsule to toggle between dark glass and light frosted glass.

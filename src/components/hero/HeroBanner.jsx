@@ -122,7 +122,7 @@ export default function HeroBanner({ movies = [] }) {
         }}
       />
 
-      {/* Multi-Stop Apple TV Vignette / Gradients */}
+      {/* Multi-Stop Cinematic Vignette / Gradients */}
       <Box
         sx={{
           position: 'absolute',

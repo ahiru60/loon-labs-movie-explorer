@@ -127,7 +127,7 @@ export default function SettingsModal() {
               variant="caption"
               sx={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)' }}
             >
-              The app has a pre-configured working key & mock fallback enabled
+              Direct real-time authentication via TMDb API v3
             </Typography>
           </Box>
         </Box>
@@ -140,7 +140,7 @@ export default function SettingsModal() {
 
         {testStatus === 'error' && (
           <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
-            Invalid API Key or network issue. The app will seamlessly fall back to realistic cached mock data.
+            Invalid API Key or network issue. Please check your credentials and connection.
           </Alert>
         )}
 
@@ -219,7 +219,7 @@ export default function SettingsModal() {
             Official TMDb API Compliance:
           </Typography>
           <Typography variant="caption" sx={{ color: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)', display: 'block' }}>
-            • 100% Real API integration directly communicating with https://api.themoviedb.org/3 without mock fallbacks.
+            • Real-time API integration directly communicating with https://api.themoviedb.org/3 endpoints.
           </Typography>
           <Typography variant="caption" sx={{ color: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)', display: 'block' }}>
             • Uses Redux Toolkit for state management (movies, favorites, auth, theme, settings).

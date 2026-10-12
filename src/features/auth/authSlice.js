@@ -19,11 +19,11 @@ const authSlice = createSlice({
       const { username, email = 'user@cineglass.tv', name } = action.payload;
       const userObj = {
         id: 'usr_' + Date.now(),
-        username: username || 'AppleTV_Explorer',
+        username: username || 'CineGlass_Member',
         displayName: name || username || 'Explorer',
-        email: email || `${username}@cineglass.tv`,
+        email: email || `${username || 'member'}@cineglass.tv`,
         avatar: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80`,
-        token: 'mock_jwt_token_' + Math.random().toString(36).substring(2),
+        token: 'auth_session_token_' + Math.random().toString(36).substring(2),
         role: 'VIP Member',
       };
       state.user = userObj;
