@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
+import PopcornIcon from './PopcornIcon';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
@@ -115,27 +115,25 @@ export default function GlassNavbar() {
               width: 34,
               height: 34,
               borderRadius: '50%',
-              background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+              background: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)',
+              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.45)',
             }}
           >
-            <RocketLaunchRoundedIcon sx={{ color: '#ffffff', fontSize: '1.15rem' }} />
+            <PopcornIcon size={19} />
           </Box>
           <Typography
             sx={{
               display: { xs: 'none', sm: 'block' },
               fontWeight: 800,
-              fontSize: '1rem',
+              fontSize: '1.05rem',
               letterSpacing: '-0.02em',
-              background: 'linear-gradient(90deg, #ffffff, #cbd5e1)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: isDark ? 'transparent' : 'inherit',
+              color: isDark ? '#ffffff' : '#0f172a',
             }}
           >
-            CineGlass
+            Cine<Box component="span" sx={{ color: '#f59e0b' }}>Pop</Box>
           </Typography>
         </Box>
 
@@ -313,7 +311,7 @@ export default function GlassNavbar() {
           )}
 
           {/* Discord / Community icon */}
-          <Tooltip title="Join CineGlass Community">
+          <Tooltip title="Join CinePop Community">
             <IconButton
               size="small"
               component="a"

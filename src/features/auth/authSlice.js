@@ -27,7 +27,7 @@ export const checkSupabaseSession = createAsyncThunk(
           username:
             session.user.user_metadata?.display_name ||
             session.user.email?.split('@')[0] ||
-            'CineGlass_Member',
+            'CinePop_Member',
           displayName:
             session.user.user_metadata?.display_name ||
             session.user.email?.split('@')[0] ||
@@ -82,7 +82,7 @@ export const loginWithSupabase = createAsyncThunk(
         username:
           data.user.user_metadata?.display_name ||
           data.user.email?.split('@')[0] ||
-          'CineGlass_Member',
+          'CinePop_Member',
         displayName:
           data.user.user_metadata?.display_name ||
           data.user.email?.split('@')[0] ||
@@ -183,12 +183,12 @@ const authSlice = createSlice({
   reducers: {
     // Synchronous login (for backwards compatibility / evaluator demo)
     login: (state, action) => {
-      const { username, email = 'user@cineglass.tv', name } = action.payload;
+      const { username, email = 'user@cinepop.tv', name } = action.payload;
       const userObj = {
         id: 'usr_' + Date.now(),
-        username: username || 'CineGlass_Member',
+        username: username || 'CinePop_Member',
         displayName: name || username || 'Explorer',
-        email: email || `${username || 'member'}@cineglass.tv`,
+        email: email || `${username || 'member'}@cinepop.tv`,
         avatar: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80`,
         token: 'auth_session_token_' + Math.random().toString(36).substring(2),
         role: 'VIP Member',

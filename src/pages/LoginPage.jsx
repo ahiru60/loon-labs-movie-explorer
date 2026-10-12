@@ -26,6 +26,7 @@ import {
   clearAuthMessages,
 } from '../features/auth/authSlice';
 import GlassButton from '../components/common/GlassButton';
+import PopcornIcon from '../components/common/PopcornIcon';
 import { validateEmail, validatePassword, sanitizeText } from '../utils/validation';
 
 export default function LoginPage() {
@@ -102,7 +103,7 @@ export default function LoginPage() {
     if (isSupabaseConfigured) {
       dispatch(
         loginWithSupabase({
-          email: 'evaluator@cineglass.tv',
+          email: 'evaluator@cinepop.tv',
           password: 'Password123!',
         })
       );
@@ -174,20 +175,20 @@ export default function LoginPage() {
             width: 60,
             height: 60,
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+            background: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             mx: 'auto',
             mb: 2,
-            boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)',
+            boxShadow: '0 8px 24px rgba(239, 68, 68, 0.4)',
           }}
         >
-          <LockOutlinedIcon sx={{ color: '#ffffff', fontSize: '1.8rem' }} />
+          <PopcornIcon size={32} />
         </Box>
 
         <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
-          {tabIndex === 0 ? 'CineGlass Sign In' : 'Create Account'}
+          {tabIndex === 0 ? 'CinePop Sign In' : 'Create Account'}
         </Typography>
         <Typography
           variant="body2"
@@ -254,7 +255,7 @@ export default function LoginPage() {
             label="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="e.g. user@cineglass.tv"
+            placeholder="e.g. user@cinepop.tv"
             sx={textFieldSx}
             slotProps={{
               input: {

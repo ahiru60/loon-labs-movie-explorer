@@ -1,4 +1,4 @@
-# 🎬 CineGlass — Modern Cinema Explorer
+# 🍿 CinePop — Modern Cinema Explorer
 
 > **Submission for Loon Labs — Stage 2 Interview Assessment**  
 > *Crafted with React, Redux Toolkit, Material-UI (MUI), React Router, and the official TMDb API.*  
@@ -11,7 +11,7 @@
 
 ## 🌟 Overview & Highlights
 
-**CineGlass** is a premium cinema exploration platform designed with modern glassmorphism. It delivers cinematic discovery with frosted translucent surfaces, real-time TMDb API integration, instant debounce search, responsive carousels, interactive details sheets, and full local persistence.
+**CinePop** is a premium cinema exploration platform designed with modern glassmorphism. It delivers cinematic discovery with frosted translucent surfaces, real-time TMDb API integration, instant debounce search, responsive carousels, interactive details sheets, and full local persistence.
 
 All movie data, TV series, genres, cast credits, official YouTube trailers, and filter queries are fetched directly from **The Movie Database (TMDb) API v3**.
 
