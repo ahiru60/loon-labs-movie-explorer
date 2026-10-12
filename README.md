@@ -3,7 +3,9 @@
 > **Submission for Loon Labs — Stage 2 Interview Assessment**  
 > *Crafted with React, Redux Toolkit, Material-UI (MUI), React Router, and the official TMDb API.*  
 > *Engineered following Apple TV Liquid Glassmorphism and Mobile-First Responsive Design Principles.*  
-> *Strictly integrated with the official TMDb API reference ([developer.themoviedb.org/reference/getting-started](https://developer.themoviedb.org/reference/getting-started)) with zero mock data.*
+> *Strictly integrated with the official TMDb API reference ([developer.themoviedb.org/reference/getting-started](https://developer.themoviedb.org/reference/getting-started)) with zero mock data.*  
+> 
+> 🔗 **Repository**: [https://github.com/ahiru60/loon-labs-movie-explorer](https://github.com/ahiru60/loon-labs-movie-explorer)
 
 ---
 
