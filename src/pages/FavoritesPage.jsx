@@ -43,7 +43,7 @@ export default function FavoritesPage() {
             {isCloudSynced ? (
               <Chip
                 icon={<CloudDoneRoundedIcon sx={{ fontSize: '1.1rem !important', color: '#10b981 !important' }} />}
-                label={isDbSyncing ? 'Syncing with Supabase...' : 'Synced with Supabase Cloud DB'}
+                label={isDbSyncing ? 'Syncing...' : 'Cloud Synced'}
                 size="small"
                 sx={{
                   bgcolor: 'rgba(16, 185, 129, 0.12)',
@@ -72,7 +72,7 @@ export default function FavoritesPage() {
             }}
           >
             {favorites.length} {favorites.length === 1 ? 'title' : 'titles'} saved
-            {isCloudSynced ? ' and synced to your Supabase account.' : ' to your library.'}
+            {isCloudSynced ? ' and synced to your cloud library.' : ' to your library.'}
           </Typography>
         </Box>
 

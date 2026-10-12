@@ -191,44 +191,13 @@ export default function LoginPage() {
           variant="body2"
           sx={{
             color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-            mb: 2,
+            mb: 3,
           }}
         >
           {tabIndex === 0
-            ? 'Access your cloud-synced Watchlist powered by Supabase'
-            : 'Register for live database synchronization & history'}
+            ? 'Sign in to access your Watchlist and synced library'
+            : 'Register to access your personal Watchlist and history'}
         </Typography>
-
-        {/* Supabase Status Chip */}
-        <Box sx={{ mb: 2.5, display: 'flex', justifyContent: 'center' }}>
-          {isSupabaseConfigured ? (
-            <Chip
-              icon={<CloudQueueRoundedIcon sx={{ fontSize: '1rem !important', color: '#10b981 !important' }} />}
-              label="Supabase DB & Auth Connected"
-              size="small"
-              sx={{
-                bgcolor: 'rgba(16, 185, 129, 0.12)',
-                color: '#34d399',
-                fontWeight: 600,
-                fontSize: '0.75rem',
-                border: '1px solid rgba(16, 185, 129, 0.25)',
-              }}
-            />
-          ) : (
-            <Chip
-              icon={<CloudQueueRoundedIcon sx={{ fontSize: '1rem !important' }} />}
-              label="Local Mode • Configure Supabase in Settings"
-              size="small"
-              onClick={() => dispatch(openSettingsModal())}
-              clickable
-              sx={{
-                bgcolor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.05)',
-                color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.65)',
-                fontSize: '0.75rem',
-              }}
-            />
-          )}
-        </Box>
 
         {/* Auth Mode Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)', mb: 3 }}>
@@ -326,9 +295,9 @@ export default function LoginPage() {
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: '#ffffff' }} />
             ) : tabIndex === 0 ? (
-              'Sign In with Supabase'
+              'Sign In'
             ) : (
-              'Create Supabase Account'
+              'Create Account'
             )}
           </GlassButton>
         </Box>

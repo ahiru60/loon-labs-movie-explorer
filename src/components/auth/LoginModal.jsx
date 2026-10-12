@@ -209,43 +209,9 @@ export default function LoginModal() {
             }}
           >
             {tabIndex === 0
-              ? 'Sign in to sync your Watchlist with Supabase database'
-              : 'Register to access cloud-synced favorites and history'}
+              ? 'Sign in to access your Watchlist and synced library'
+              : 'Register to access your personal Watchlist and history'}
           </Typography>
-
-          {/* Supabase Status Chip */}
-          <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'center' }}>
-            {isSupabaseConfigured ? (
-              <Chip
-                icon={<CloudQueueRoundedIcon sx={{ fontSize: '1rem !important', color: '#10b981 !important' }} />}
-                label="Supabase DB & Auth Connected"
-                size="small"
-                sx={{
-                  bgcolor: 'rgba(16, 185, 129, 0.12)',
-                  color: '#34d399',
-                  fontWeight: 600,
-                  fontSize: '0.72rem',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
-                }}
-              />
-            ) : (
-              <Chip
-                icon={<CloudQueueRoundedIcon sx={{ fontSize: '1rem !important' }} />}
-                label="Local Mode • Configure Supabase in Settings"
-                size="small"
-                onClick={() => {
-                  dispatch(closeLoginModal());
-                  dispatch(openSettingsModal());
-                }}
-                clickable
-                sx={{
-                  bgcolor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.05)',
-                  color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.65)',
-                  fontSize: '0.72rem',
-                }}
-              />
-            )}
-          </Box>
         </Box>
 
         {/* Auth Mode Tabs */}
@@ -346,9 +312,9 @@ export default function LoginModal() {
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: '#ffffff' }} />
             ) : tabIndex === 0 ? (
-              'Sign In with Supabase'
+              'Sign In'
             ) : (
-              'Create Supabase Account'
+              'Create Account'
             )}
           </GlassButton>
         </Box>

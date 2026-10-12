@@ -467,7 +467,7 @@ export default function GlassNavbar() {
             </Typography>
             {user?.isSupabase && (
               <Chip
-                label="Supabase"
+                label="Cloud Member"
                 size="small"
                 sx={{
                   height: 18,
