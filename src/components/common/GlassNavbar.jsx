@@ -89,12 +89,13 @@ export default function GlassNavbar() {
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-          gap: { xs: 1, md: 2 },
-          px: { xs: 2, sm: 3, md: 3.5 },
-          py: { xs: 0.8, md: 1 },
+          gap: { xs: 1, md: 1.8 },
+          px: { xs: 2, sm: 2.8, md: 3.2 },
+          py: { xs: 0.8, md: 0.9 },
           borderRadius: 9999,
-          maxWidth: 920,
+          maxWidth: 960,
           width: 'auto',
+          position: 'relative',
         }}
       >
         {/* Logo / Rocket Icon */}
@@ -103,32 +104,34 @@ export default function GlassNavbar() {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
+            gap: 1.2,
             cursor: 'pointer',
-            mr: { xs: 0.5, md: 1.5 },
-            transition: 'transform 0.2s',
-            '&:hover': { transform: 'scale(1.08)' },
+            mr: { xs: 0.5, md: 1.2 },
+            transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            '&:hover': { transform: 'scale(1.06)' },
           }}
         >
           <Box
             sx={{
-              width: 34,
-              height: 34,
+              width: 36,
+              height: 36,
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.45)',
+              boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.5)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              flexShrink: 0,
             }}
           >
-            <PopcornIcon size={19} />
+            <PopcornIcon size={20} />
           </Box>
           <Typography
             sx={{
               display: { xs: 'none', sm: 'block' },
               fontWeight: 800,
-              fontSize: '1.05rem',
+              fontSize: '1.08rem',
               letterSpacing: '-0.02em',
               color: isDark ? '#ffffff' : '#0f172a',
             }}
@@ -137,12 +140,21 @@ export default function GlassNavbar() {
           </Typography>
         </Box>
 
-        {/* Navigation Tabs (Desktop / Tablet) */}
+        {/* Navigation Tabs (Apple VisionOS Segmented Glass Controls) */}
         <Box
           sx={{
             display: { xs: 'none', md: 'flex' },
             alignItems: 'center',
-            gap: 1,
+            gap: 0.4,
+            p: 0.35,
+            borderRadius: 9999,
+            backgroundColor: isDark ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.04)',
+            boxShadow: isDark
+              ? 'inset 0 1px 2px rgba(0, 0, 0, 0.4)'
+              : 'inset 0 1px 2px rgba(0, 0, 0, 0.05)',
+            border: isDark
+              ? '1px solid rgba(255, 255, 255, 0.06)'
+              : '1px solid rgba(0, 0, 0, 0.03)',
           }}
         >
           {navLinks.map((item) => {
@@ -158,8 +170,8 @@ export default function GlassNavbar() {
                 to={item.path}
                 sx={{
                   position: 'relative',
-                  px: 1.8,
-                  py: 0.7,
+                  px: 2,
+                  py: 0.6,
                   borderRadius: 9999,
                   textDecoration: 'none',
                   fontSize: '0.88rem',
@@ -169,19 +181,39 @@ export default function GlassNavbar() {
                       ? '#ffffff'
                       : '#0f172a'
                     : isDark
-                    ? 'rgba(255, 255, 255, 0.65)'
-                    : 'rgba(15, 23, 42, 0.65)',
+                    ? 'rgba(255, 255, 255, 0.72)'
+                    : 'rgba(15, 23, 42, 0.72)',
                   backgroundColor: isActive
                     ? isDark
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(0, 0, 0, 0.08)'
+                      ? 'rgba(255, 255, 255, 0.18)'
+                      : 'rgba(255, 255, 255, 0.9)'
                     : 'transparent',
-                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  boxShadow: isActive
+                    ? isDark
+                      ? '0 3px 12px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4), inset 0 -1px 1px rgba(255, 255, 255, 0.1)'
+                      : '0 3px 12px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)'
+                    : 'none',
+                  border: isActive
+                    ? isDark
+                      ? '1px solid rgba(255, 255, 255, 0.22)'
+                      : '1px solid rgba(255, 255, 255, 0.9)'
+                    : '1px solid transparent',
+                  backdropFilter: isActive ? 'blur(16px)' : 'none',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
                     color: isDark ? '#ffffff' : '#000000',
-                    backgroundColor: isDark
-                      ? 'rgba(255, 255, 255, 0.08)'
-                      : 'rgba(0, 0, 0, 0.04)',
+                    backgroundColor: isActive
+                      ? isDark
+                        ? 'rgba(255, 255, 255, 0.22)'
+                        : '#ffffff'
+                      : isDark
+                      ? 'rgba(255, 255, 255, 0.09)'
+                      : 'rgba(0, 0, 0, 0.05)',
+                    boxShadow: !isActive
+                      ? isDark
+                        ? 'inset 0 1px 0.5px rgba(255, 255, 255, 0.22)'
+                        : 'inset 0 1px 0.5px rgba(255, 255, 255, 0.7)'
+                      : undefined,
                     transform: 'translateY(-1px)',
                   },
                 }}
@@ -207,8 +239,8 @@ export default function GlassNavbar() {
           })}
         </Box>
 
-        {/* Action Icons Section */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
+        {/* Action Icons Section (VisionOS Circular Glass Buttons) */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.6, sm: 0.9 } }}>
           {/* Search Icon */}
           <Tooltip title="Search Movies">
             <IconButton
@@ -216,30 +248,54 @@ export default function GlassNavbar() {
               onClick={() => navigate('/search')}
               sx={{
                 color: isDark ? 'rgba(255,255,255,0.85)' : '#0f172a',
-                transition: 'all 0.2s',
-                '&:hover': { transform: 'scale(1.15)', color: '#6366f1' },
+                borderRadius: '50%',
+                p: 0.75,
+                border: '1px solid transparent',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  color: '#6366f1',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(0, 0, 0, 0.06)',
+                  boxShadow: isDark
+                    ? '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35)'
+                    : '0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                },
+                '&:active': { transform: 'scale(0.95)' },
               }}
             >
               <SearchRoundedIcon fontSize="small" />
             </IconButton>
           </Tooltip>
 
-          {/* Notifications Icon with "2" badge */}
+          {/* Notifications Icon with badge */}
           <Tooltip title="Notifications">
             <IconButton
               size="small"
               onClick={handleOpenNotifMenu}
               sx={{
                 color: isDark ? 'rgba(255,255,255,0.85)' : '#0f172a',
-                transition: 'all 0.2s',
-                '&:hover': { transform: 'scale(1.15)', color: '#ec4899' },
+                borderRadius: '50%',
+                p: 0.75,
+                border: '1px solid transparent',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  color: '#ec4899',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(0, 0, 0, 0.06)',
+                  boxShadow: isDark
+                    ? '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35)'
+                    : '0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                },
+                '&:active': { transform: 'scale(0.95)' },
               }}
             >
               <Badge
                 badgeContent={unreadNotifsCount}
                 sx={{
                   '& .MuiBadge-badge': {
-                    backgroundColor: '#8b5cf6', // Violet badge like Figma
+                    backgroundColor: '#8b5cf6',
                     color: '#ffffff',
                     fontWeight: 700,
                     fontSize: '0.65rem',
@@ -253,15 +309,26 @@ export default function GlassNavbar() {
             </IconButton>
           </Tooltip>
 
-          {/* Theme Toggle (Light / Dark mode requirement) */}
+          {/* Theme Toggle (Light / Dark mode) */}
           <Tooltip title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}>
             <IconButton
               size="small"
               onClick={() => dispatch(toggleTheme())}
               sx={{
                 color: isDark ? '#fbbf24' : '#6366f1',
-                transition: 'all 0.2s',
-                '&:hover': { transform: 'scale(1.15)' },
+                borderRadius: '50%',
+                p: 0.75,
+                border: '1px solid transparent',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(0, 0, 0, 0.06)',
+                  boxShadow: isDark
+                    ? '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35)'
+                    : '0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                },
+                '&:active': { transform: 'scale(0.95)' },
               }}
             >
               {isDark ? (
@@ -278,15 +345,22 @@ export default function GlassNavbar() {
               <IconButton
                 size="small"
                 onClick={handleOpenUserMenu}
-                sx={{ p: 0.3 }}
+                sx={{
+                  p: 0.3,
+                  borderRadius: '50%',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  '&:hover': { transform: 'scale(1.1)' },
+                  '&:active': { transform: 'scale(0.95)' },
+                }}
               >
                 <Avatar
                   src={user?.avatar}
                   alt={user?.displayName}
                   sx={{
-                    width: 28,
-                    height: 28,
+                    width: 30,
+                    height: 30,
                     border: '1.5px solid #6366f1',
+                    boxShadow: '0 2px 8px rgba(99, 102, 241, 0.4)',
                     fontSize: '0.8rem',
                   }}
                 >
@@ -301,8 +375,20 @@ export default function GlassNavbar() {
                 onClick={() => dispatch(openLoginModal())}
                 sx={{
                   color: isDark ? 'rgba(255,255,255,0.85)' : '#0f172a',
-                  transition: 'all 0.2s',
-                  '&:hover': { transform: 'scale(1.15)', color: '#6366f1' },
+                  borderRadius: '50%',
+                  p: 0.75,
+                  border: '1px solid transparent',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  '&:hover': {
+                    transform: 'scale(1.1)',
+                    color: '#6366f1',
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)',
+                    border: isDark ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(0, 0, 0, 0.06)',
+                    boxShadow: isDark
+                      ? '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                  },
+                  '&:active': { transform: 'scale(0.95)' },
                 }}
               >
                 <PersonRoundedIcon fontSize="small" />
@@ -321,8 +407,20 @@ export default function GlassNavbar() {
               sx={{
                 color: isDark ? 'rgba(255,255,255,0.7)' : '#64748b',
                 display: { xs: 'none', sm: 'inline-flex' },
-                transition: 'all 0.2s',
-                '&:hover': { color: '#5865F2', transform: 'scale(1.15)' },
+                borderRadius: '50%',
+                p: 0.75,
+                border: '1px solid transparent',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover': {
+                  color: '#5865F2',
+                  transform: 'scale(1.1)',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(0, 0, 0, 0.06)',
+                  boxShadow: isDark
+                    ? '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35)'
+                    : '0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                },
+                '&:active': { transform: 'scale(0.95)' },
               }}
             >
               <ForumRoundedIcon fontSize="small" />

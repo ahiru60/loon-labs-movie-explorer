@@ -60,7 +60,6 @@ export default function MobileBottomNav() {
           py: 1,
           px: 1.5,
           borderRadius: 9999,
-          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45)',
         }}
       >
         {items.map((item) => {

@@ -15,7 +15,6 @@ import {
 import { toggleFavorite } from '../../features/favorites/favoritesSlice';
 import RatingBadge from '../common/RatingBadge';
 import GlassButton from '../common/GlassButton';
-import TmdbAttribution from '../common/TmdbAttribution';
 import { tmdbApi } from '../../api/tmdbApi';
 import {
   getImageUrl,
@@ -327,18 +326,6 @@ export default function HeroBanner({ movies = [] }) {
             }}
           />
         ))}
-      </Box>
-
-      {/* Official TMDb Attribution Badge */}
-      <Box
-        sx={{
-          zIndex: 5,
-          display: 'flex',
-          justifyContent: 'center',
-          px: 2,
-        }}
-      >
-        <TmdbAttribution />
       </Box>
     </Box>
   );
