@@ -15,7 +15,7 @@
 
 ### Core Architecture Highlights
 - **Modern Glassmorphic UI**: Frosted glass capsules, translucent cards, subtle borders, backdrop blurs (`backdrop-filter: blur(28px)`), and cohesive dark/light mode tokens.
-- **Direct Real-Time TMDb Integration**: Zero mock data; live endpoints provide trending movies, theatrical releases, top-rated classics, official YouTube trailers, genres, and cast metadata.
+- **Direct Real-Time TMDb Integration**: Live endpoints provide trending movies, theatrical releases, top-rated classics, official YouTube trailers, genres, and cast metadata.
 - **Supabase Cloud Database & Auth**: PostgreSQL database table (`public.favorites`) with Row-Level Security (RLS) policies, JWT session persistence, and seamless offline `localStorage` fallback.
 - **Enterprise Web Security**: Zero hardcoded secrets, Content Security Policy (CSP) headers, input sanitization, parameterized queries (SQLi prevention), and strictly encapsulated environment variables.
 - **Normalized Geometry**: Mathematically locked carousel items with proportional 2:3 aspect ratio posters and zero Cumulative Layout Shift (CLS).
