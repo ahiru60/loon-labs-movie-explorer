@@ -51,13 +51,6 @@ The application manages its entire data flow via **Redux Toolkit** with modular 
 - `themeSlice`: Persists user's dark/light preference across browser sessions.
 - `settingsSlice`: In-app notification center state.
 
-### 4. Enterprise Security Standards
-- **Secret Isolation**: Zero secrets or API keys are stored in source code or tracked in Git. All credentials strictly read from `import.meta.env.VITE_*`.
-- **Content Security Policy (CSP)**: Enterprise meta tags restricting scripts, styles, fonts, frames (YouTube), images (TMDb, Unsplash), and backend connect origins (TMDb, Supabase).
-- **SQL Injection Prevention**: Supabase query builder uses parameterized queries exclusively, coupled with Postgres Row-Level Security (`auth.uid() = user_id`).
-- **Input Sanitization**: Zero-dependency validation utility (`src/utils/validation.js`) sanitizing search strings, emails, passwords, and entity IDs before dispatching network requests.
-- **Error Shielding**: Raw database errors and internal schemas are sanitized before display; end users receive helpful, friendly error notices.
-
 ---
 
 ## 🔌 API Usage & Integration
